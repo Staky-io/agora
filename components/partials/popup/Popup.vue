@@ -3,18 +3,33 @@
     class="fixed top-0 left-0 grid w-screen h-screen z-100 py-10"
     @click="closeOnClick"
   >
-    <Container class="grid">
+    <Container
+      class="grid gap-40"
+    >
       <div
-        class="grid gap-10 content-start justify-self-center self-center w-full s:w-512 min-h-192 p-20 bg-grey-300 rounded-5"
+        class="grid gap-16 content-start justify-self-center self-center w-full p-20 bg-grey-300 rounded-20 transition-width duration-400"
+        :class="{
+          's:w-256': size === 's',
+          's:w-512': size === 'm',
+          's:w-1024': size === 'l',
+        }"
         @click.stop
       >
-        <button
-          class="justify-self-end"
-          @click="closeOnClick"
-        >
-          Close
-        </button>
-        <slot name="header" />
+        <div class="grid gap-10 grid-cols-1fr-auto items-center">
+          <h3 class="typo-title-3">
+            <slot name="header" />
+          </h3>
+          <button
+            v-if="requireButton"
+            class="grid place-items-center w-20 h-20 text-white hover:text-primary"
+            @click="closeOnClick"
+          >
+            <UtilsIcon
+              name="Cross"
+              class="w-20 h-20"
+            />
+          </button>
+        </div>
         <slot name="body" />
       </div>
     </Container>
@@ -23,6 +38,23 @@
 
 <script setup lang="ts">
 const { emit, events } = useEventsBus()
+
+type Sizes =
+  | 's'
+  | 'm'
+  | 'l'
+
+type Props = {
+  blockOverlayClick?: boolean
+  requireButton?: boolean
+  size?: Sizes
+}
+
+withDefaults(defineProps<Props>(), {
+  blockOverlayClick: false,
+  requireButton: false,
+  size: 'm',
+})
 
 const closeOnClick = (): void => {
   emit(events.POPUP_CLOSE)

@@ -1,5 +1,8 @@
 <template>
-  <PartialsPopup>
+  <PartialsPopup
+    :size="currentStep === LOGIN_STEPS.LEDGER ? 'm' : 's'"
+    require-button
+  >
     <template #header>
       Log in
     </template>
@@ -18,14 +21,15 @@
             <br>
             Please use Google Chrome / Brave on desktop, or MyIconWallet app on mobile.
           </div>
-          <button
+          <ButtonMain
             v-for="(wallet, i) in compatibleWallets"
             v-else
             :key="`wallet-${i}`"
+            version="secondary"
             @click="connectWallet(wallet.id)"
           >
             {{ wallet.name }}
-          </button>
+          </ButtonMain>
         </div>
         <div
           v-else-if="currentStep === LOGIN_STEPS.LEDGER"
