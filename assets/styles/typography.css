@@ -1,0 +1,59 @@
+.typo-caption {
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+}
+
+.typo-button-l {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+}
+
+.typo-button-s {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.typo-paragraph {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.typo-text-semibold {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.typo-text-medium {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.typo-text-regular {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.typo-title-l {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.typo-title-m {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.typo-title-s {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+}

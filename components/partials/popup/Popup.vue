@@ -5,7 +5,7 @@
   >
     <Container class="grid">
       <div
-        class="grid gap-10 content-start justify-self-center self-center w-full s:w-512 min-h-192 p-20 bg-white rounded-5"
+        class="grid gap-10 content-start justify-self-center self-center w-full s:w-512 min-h-192 p-20 bg-grey-300 rounded-5"
         @click.stop
       >
         <button

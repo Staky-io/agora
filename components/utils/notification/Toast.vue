@@ -2,7 +2,7 @@
   <div
     ref="root"
     :class="$style.container"
-    class="p-10 bg-white rounded-5 shadow"
+    class="p-10 bg-grey-300 rounded-5 shadow"
     @mouseenter="isHovering = true"
     @mouseleave="isHovering = false"
   >
