@@ -1,59 +1,59 @@
 .typo-caption {
   font-weight: 500;
-  font-size: 10px;
-  line-height: 12px;
+  font-size: 1.0rem;
+  line-height: 1.2rem;
 }
 
 .typo-button-l {
   font-weight: 600;
-  font-size: 16px;
-  line-height: 19px;
+  font-size: 1.6rem;
+  line-height: 1.9rem;
 }
 
 .typo-button-s {
   font-weight: 600;
-  font-size: 12px;
-  line-height: 15px;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
 }
 
 .typo-paragraph {
   font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
+  font-size: 1.4rem;
+  line-height: 1.7rem;
 }
 
 .typo-text-semibold {
   font-weight: 600;
-  font-size: 12px;
-  line-height: 15px;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
 }
 
 .typo-text-medium {
   font-weight: 500;
-  font-size: 12px;
-  line-height: 15px;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
 }
 
 .typo-text-regular {
   font-weight: 400;
-  font-size: 12px;
-  line-height: 15px;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
 }
 
 .typo-title-l {
   font-weight: 700;
-  font-size: 20px;
-  line-height: 24px;
+  font-size: 2.0rem;
+  line-height: 2.4rem;
 }
 
 .typo-title-m {
   font-weight: 700;
-  font-size: 18px;
-  line-height: 22px;
+  font-size: 1.8rem;
+  line-height: 2.2rem;
 }
 
 .typo-title-s {
   font-weight: 700;
-  font-size: 14px;
-  line-height: 17px;
+  font-size: 1.4rem;
+  line-height: 1.7rem;
 }

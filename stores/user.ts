@@ -2,8 +2,6 @@ import { defineStore } from 'pinia'
 import { truncate } from '@/assets/scripts/helpers'
 
 export const useUserStore = defineStore('user-store', () => {
-  const { truncate } = useFunctionsHelpers()
-
   // States
   const isLoggedIn = ref<boolean>(false)
   const address = ref<string>('')

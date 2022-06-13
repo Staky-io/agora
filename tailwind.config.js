@@ -237,6 +237,8 @@ module.exports = {
       10: '10.0px',
       15: '15.0px',
       20: '20.0px',
+      25: '25.0px',
+      30: '30.0px',
     },
     // Tailwind Utility : border-, border-t- etc.
     borderWidth: {
