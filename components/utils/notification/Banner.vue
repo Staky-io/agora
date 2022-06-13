@@ -1,6 +1,15 @@
 <template>
   <div
-    :class="$style.banner"
+    :class="[
+      $style.banner,
+      {
+        'text-white bg-white': !type,
+        'text-success bg-success': type === 'success',
+        'text-warning bg-warning': type === 'warning',
+        'text-error bg-error': type === 'error',
+        'text-info bg-info': type === 'info',
+      }
+    ]"
     class="grid items-center bg-opacity-15"
   >
     <Container class="grid grid-flow-col justify-center items-center gap-6 overflow-hidden typo-text-regular">
