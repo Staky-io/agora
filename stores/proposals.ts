@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 
 export type Proposal = {
+  uid: string
   name: string
   title: string
   author: string
@@ -27,16 +28,22 @@ const createRandomParagraph = (length: number): string => [...new Array(Math.max
   .join(' ')
 
 export const useProposalsStore = defineStore('proposals-store', () => {
+  const route = useRoute()
+
   // States
-  const currentProposal = ref<Proposal>(null)
   const proposals = ref<Proposal[]>([])
 
   // Getters
+  const currentProposal = computed<Proposal>(() => {
+    if (route.name === 'proposal-uid') return proposals.value.find(({ uid }) => uid === route.params.uid)
+    return null
+  })
 
   // Actions
   const fetchProposals = async (): Promise<void> => {
     [...new Array(10)]
       .map((): Proposal => ({
+        uid: Date.now().toString(36) + Math.random().toString(36).split('.')[1],
         name: capitalize(createRandomWord({ length: 5 + Math.ceil(Math.random() * 5), range: { min: 10, max: 25 } })),
         title: capitalize(createRandomSentence(Math.ceil(Math.random() * 5))),
         author: `hx${[...new Array(40)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`,

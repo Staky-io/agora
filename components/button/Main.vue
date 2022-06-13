@@ -11,11 +11,12 @@
         'text-warning bg-warning bg-opacity-25 border-warning border-opacity-0 hover:border-opacity-100 active:border-opacity-100 active:bg-opacity-50': version === 'warning-bg',
         'text-error bg-error bg-opacity-25 border-error border-opacity-0 hover:border-opacity-100 active:border-opacity-100 active:bg-opacity-50': version === 'error-bg',
         'text-info bg-info bg-opacity-25 border-info border-opacity-0 hover:border-opacity-100 active:border-opacity-100 active:bg-opacity-50': version === 'info-bg',
+        'text-white bg-white bg-opacity-25 border-white border-opacity-0 hover:border-opacity-100 active:border-opacity-100 active:bg-opacity-50': version === 'neutral-bg',
         'text-success bg-success bg-opacity-0 border-grey-200 hover:border-success active:bg-opacity-100 active:bg-success active:text-white': version === 'success-border',
         'text-warning bg-warning bg-opacity-0 border-grey-200 hover:border-warning active:bg-opacity-100 active:bg-warning active:text-white': version === 'warning-border',
         'text-error bg-error bg-opacity-0 border-grey-200 hover:border-error active:bg-opacity-100 active:bg-error active:text-white': version === 'error-border',
         'text-info bg-info bg-opacity-0 border-grey-200 hover:border-info active:bg-opacity-100 active:bg-info active:text-white': version === 'info-border',
-        'text-white bg-white bg-opacity-0 border-grey-200 hover:border-white active:bg-opacity-100 active:bg-white active:text-grey-400': version === 'neutral',
+        'text-white bg-white bg-opacity-0 border-grey-200 hover:border-white active:bg-opacity-100 active:bg-white active:text-grey-400': version === 'neutral-border',
       }
     ]"
     v-bind="{
@@ -41,11 +42,12 @@ type Version =
   | 'warning-bg'
   | 'error-bg'
   | 'info-bg'
+  | 'neutral-bg'
   | 'success-border'
   | 'warning-border'
   | 'error-border'
   | 'info-border'
-  | 'neutral'
+  | 'neutral-border'
 
 type LinkTo =
   | string

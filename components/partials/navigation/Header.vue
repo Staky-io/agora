@@ -132,10 +132,12 @@ type SocialData = {
   icon: IconsNames
 }
 
+const route = useRoute()
+
 const { isLoggedIn, address, truncatedAddress } = storeToRefs(useUserStore())
 const { emit, events } = useEventsBus()
 
-const headingType = ref<HEADING>(HEADING.PROTOCOL_PROPOSALS)
+const headingType = ref<HEADING>(null)
 const isMounted = ref<boolean>(false)
 const scrollRatio = ref<number>(0)
 const activeTabIndex = ref<number>(0)
@@ -154,6 +156,17 @@ const updateTab = (index: number): void => {
 const onPageScroll = (): void => {
   scrollRatio.value = Number(!window.scrollY)
 }
+
+watch(route, ({ name }) => {
+  switch (name) {
+    case 'proposal-uid':
+      headingType.value = HEADING.VOTE_INFORMATION
+      break
+    default:
+      headingType.value = HEADING.PROTOCOL_PROPOSALS
+      break
+  }
+}, { immediate: true })
 
 onMounted(() => {
   window.addEventListener('scroll', onPageScroll)

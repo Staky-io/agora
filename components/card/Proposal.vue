@@ -1,5 +1,5 @@
 <template>
-  <button class="grid gap-32 grid-flow-col justify-between items-start p-32 text-left rounded-30 border-1 border-grey-200 border-opacity-0 hover:border-opacity-100 transition-border duration-200">
+  <article class="grid gap-32 grid-flow-col justify-between items-start p-32 text-left rounded-30 border-1 border-grey-200 border-opacity-0 hover:border-opacity-100 transition-border duration-200">
     <div class="grid gap-10 max-w-640">
       <div class="grid gap-10 grid-flow-col items-center justify-start">
         <div class="w-24 h-24 bg-grey-200 rounded-full" />
@@ -20,12 +20,12 @@
       <div class="text-grey-100 typo-caption">
         <span
           :class="{
-            'text-success': votesStatus.type === 'for',
-            'text-error': votesStatus.type === 'against',
-            'text-white': votesStatus.type === 'abstain',
+            'text-success': votesStatus.choice === 'for',
+            'text-error': votesStatus.choice === 'against',
+            'text-white': votesStatus.choice === 'abstain',
           }"
         >
-          {{ capitalize(votesStatus.type) }} - {{ votesStatus.total }}
+          {{ capitalize(votesStatus.choice) }} - {{ votesStatus.count }}
         </span>
         {{ ' ' }}
         {{ name }}
@@ -34,13 +34,14 @@
     <UtilsChip :version="status === 'Active' ? 'success' : 'error'">
       {{ status }}
     </UtilsChip>
-  </button>
+  </article>
 </template>
 
 <script setup lang="ts">
 import { capitalize, truncate } from '@/assets/scripts/helpers'
 
 type Props = {
+  uid: string
   name: string
   title: string
   author: string
@@ -54,8 +55,8 @@ type Props = {
 }
 
 type VoteStatus = {
-  type: keyof Props['votes']
-  total: Props['votes'][keyof Props['votes']]
+  choice: keyof Props['votes']
+  count: Props['votes'][keyof Props['votes']]
 }
 
 const props = defineProps<Props>()
@@ -68,6 +69,6 @@ const truncatedDescription = computed<string>(
 
 const votesStatus = computed<VoteStatus>(
   () => Object.entries(props.votes)
-    .reduce((accu, [type, total]) => (total > accu.total ? { type, total } : accu), { type: 'for', total: props.votes.for }) as VoteStatus,
+    .reduce((accu, [choice, count]) => (count > accu.count ? { choice, count } : accu), { choice: 'for', count: props.votes.for }) as VoteStatus,
 )
 </script>

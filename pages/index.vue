@@ -3,12 +3,17 @@
     <h1 class="text-white typo-title-m">
       Proposals
     </h1>
-    <div class="grid gap-16">
-      <CardProposal
+    <div
+      v-if="isMounted && proposals.length"
+      class="grid gap-16"
+    >
+      <nuxt-link
         v-for="(proposal, i) in proposals"
         :key="`proposal-${i}`"
-        v-bind="proposal"
-      />
+        :to="{ name: 'proposal-uid', params: { uid: proposal.uid } }"
+      >
+        <CardProposal v-bind="proposal" />
+      </nuxt-link>
     </div>
   </Container>
 </template>
@@ -17,12 +22,11 @@
 import { storeToRefs } from 'pinia'
 import { useProposalsStore } from '@/stores/proposals'
 
-const proposalsStore = useProposalsStore()
+const { proposals } = storeToRefs(useProposalsStore())
 
-const { fetchProposals } = proposalsStore
-const { proposals } = storeToRefs(proposalsStore)
+const isMounted = ref<boolean>(false)
 
-onMounted(async () => {
-  await fetchProposals()
+onMounted(() => {
+  isMounted.value = true
 })
 </script>
