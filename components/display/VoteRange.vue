@@ -17,25 +17,23 @@
             'text-white': version === 'neutral',
           }"
         >
-          {{ (ratio * 100).toFixed(2) }}%
+          {{ percent.toFixed(2) }}%
         </span>
       </div>
     </div>
     <div
-      class="relative w-full h-4 rounded-max bg-opacity-35"
-      :class="{
-        'text-success bg-success': version === 'success',
-        'text-warning bg-warning': version === 'warning',
-        'text-error bg-error': version === 'error',
-        'text-info bg-info': version === 'info',
-        'text-white bg-white': version === 'neutral',
-      }"
-    >
-      <div
-        class="absolute left-0 top-0 w-full h-full bg-current rounded-inherit origin-left"
-        :class="$style.range"
-      />
-    </div>
+      class="relative w-full h-4 rounded-max bg-opacity-35 after:blur-sm"
+      :class="[
+        $style.range,
+        {
+          'text-success bg-success': version === 'success',
+          'text-warning bg-warning': version === 'warning',
+          'text-error bg-error': version === 'error',
+          'text-info bg-info': version === 'info',
+          'text-white bg-white': version === 'neutral',
+        }
+      ]"
+    />
   </div>
 </template>
 
@@ -55,11 +53,15 @@ type Props = {
   ratio: number
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+const percent = computed<number>(() => props.ratio * 100)
 </script>
 
 <style lang="scss" module>
-.range {
-  transform: scaleX(v-bind(ratio));
+.range::before,
+.range::after {
+  width: calc(v-bind(percent) * 1%);
+  @apply absolute content-[""] left-0 top-0 h-full bg-current rounded-inherit;
 }
 </style>
