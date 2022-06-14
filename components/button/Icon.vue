@@ -48,6 +48,7 @@
 
 <script setup lang="ts">
 import type { IconsNames } from '@/composables/useIconsComponents'
+import type { LinkTo } from '@/composables/useNuxtLink'
 
 type Version =
   | 'primary'
@@ -57,27 +58,6 @@ type Version =
   | 'error'
   | 'info'
   | 'neutral'
-
-type LinkTo =
-  | string
-  | (
-    & {
-      query?: Record<string | number, string | number | null | undefined | undefined[]>
-      hash?: string
-    }
-    & (
-      | {
-        path: string
-        name?: never
-        params?: never
-      }
-      | {
-        path?: never
-        name: string | symbol
-        params?: Record<string, string | number | null | undefined | (string | number)[]>
-      }
-    )
-  )
 
 type Props = {
   version?: Version
@@ -91,7 +71,5 @@ withDefaults(defineProps<Props>(), {
   version: 'primary',
 })
 
-const NuxtLink = defineNuxtLink({
-  componentName: 'NuxtLink',
-})
+const { NuxtLink } = useNuxtLink()
 </script>

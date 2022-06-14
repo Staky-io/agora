@@ -59,6 +59,8 @@
 </template>
 
 <script setup lang="ts">
+import type { LinkTo } from '@/composables/useNuxtLink'
+
 type Version =
   | 'primary'
   | 'secondary'
@@ -73,27 +75,6 @@ type Version =
   | 'error-border'
   | 'info-border'
   | 'neutral-border'
-
-type LinkTo =
-  | string
-  | (
-    & {
-      query?: Record<string | number, string | number | null | undefined | undefined[]>
-      hash?: string
-    }
-    & (
-      | {
-        path: string
-        name?: never
-        params?: never
-      }
-      | {
-        path?: never
-        name: string | symbol
-        params?: Record<string, string | number | null | undefined | (string | number)[]>
-      }
-    )
-  )
 
 type Props = {
   version?: Version
@@ -113,11 +94,8 @@ const props = withDefaults(defineProps<Props>(), {
   copiedText: '',
 })
 
-const NuxtLink = defineNuxtLink({
-  componentName: 'NuxtLink',
-})
-
 const { copyText } = useCopyText()
+const { NuxtLink } = useNuxtLink()
 
 const onClick = (): void => {
   if (props.copiedText) {
