@@ -2,19 +2,33 @@
   <div
     ref="root"
     :class="$style.container"
-    class="p-10 bg-grey-300 rounded-5 shadow"
+    class="grid gap-10 grid-cols-auto-1fr p-10 bg-grey-300 rounded-5 shadow after:text-primary"
     @mouseenter="isHovering = true"
     @mouseleave="isHovering = false"
   >
-    <button @click="closeNotificationToast">
-      Close
+    <button
+      class="grid place-items-center w-20 h-20"
+      @click="closeNotificationToast"
+    >
+      <UtilsIcon
+        name="Cross"
+        class="w-20 h-20"
+      />
     </button>
-    <h3 v-if="title">
-      {{ title }}
-    </h3>
-    <p v-if="message">
-      {{ message }}
-    </p>
+    <div class="grid gap-10">
+      <h3
+        v-if="title"
+        class="typo-title-s"
+      >
+        {{ title }}
+      </h3>
+      <p
+        v-if="message"
+        class="typo-paragraph"
+      >
+        {{ message }}
+      </p>
+    </div>
   </div>
 </template>
 
