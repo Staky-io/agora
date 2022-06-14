@@ -1,5 +1,6 @@
 <template>
-  <button
+  <component
+    :is="to ? NuxtLink : 'button'"
     class="
       relative
       flex
@@ -27,13 +28,22 @@
       'text-info before:bg-info before:bg-opacity-25': version === 'info',
       'text-white border-1 border-white': version === 'neutral',
     }"
-    v-bind="$attrs"
+    v-bind="{
+      ...$attrs,
+      ...Object.entries({
+        to,
+        target,
+        type,
+      })
+        .filter(([_, value]) => !!value)
+        .reduce((accu, [key, value]) => ({ ...accu, ...!!value && { [key]: value } }), {}),
+    }"
   >
     <UtilsIcon
       class="relative w-20 h-20"
       :name="name"
     />
-  </button>
+  </component>
 </template>
 
 <script setup lang="ts">
@@ -48,12 +58,40 @@ type Version =
   | 'info'
   | 'neutral'
 
+type LinkTo =
+  | string
+  | (
+    & {
+      query?: Record<string | number, string | number | null | undefined | undefined[]>
+      hash?: string
+    }
+    & (
+      | {
+        path: string
+        name?: never
+        params?: never
+      }
+      | {
+        path?: never
+        name: string | symbol
+        params?: Record<string, string | number | null | undefined | (string | number)[]>
+      }
+    )
+  )
+
 type Props = {
   version?: Version
+  to?: LinkTo
+  target?: '_self' | '_blank' | '_parent' | '_top'
+  type?: 'submit' | 'reset' | 'button'
   name: IconsNames
 }
 
 withDefaults(defineProps<Props>(), {
   version: 'primary',
+})
+
+const NuxtLink = defineNuxtLink({
+  componentName: 'NuxtLink',
 })
 </script>

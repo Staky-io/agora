@@ -36,8 +36,7 @@
     "nuxt": "3.0.0-rc.3",
     "pinia": "^2.0.14",
     "pinia-plugin-persistedstate": "^1.6.1",
-    "tailwindcss": "^3.0.24",
-    "vue-router": "^4.0.15"
+    "tailwindcss": "^3.0.24"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.0",

@@ -6,7 +6,7 @@
         <div class="text-grey-100">
           <span class="typo-text-semibold">{{ name }} by</span>
           {{ ' ' }}
-          <span class="text-white typo-text-medium">{{ truncate(author) }} by</span>
+          <span class="text-white typo-text-medium">{{ /hx[a-f0-9]{40,40}/.test(author) ? truncate(author) : author }}</span>
           {{ ' ' }}
           <span class="typo-text-regular">Core</span>
         </div>

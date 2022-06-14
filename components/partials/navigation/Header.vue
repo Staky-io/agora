@@ -15,7 +15,10 @@
         v-if="isMounted"
         class="grid gap-10 grid-flow-col items-center"
       >
-        <ButtonIcon name="Math/Plus" />
+        <ButtonIcon
+          name="Math/Plus"
+          :to="{ name: 'create' }"
+        />
         <ButtonMain
           v-if="!isLoggedIn"
           @click="emit(events.POPUP_GUARD)"
@@ -106,8 +109,11 @@
               </button>
             </p>
           </div>
-          <ButtonMain version="secondary">
-            Preview
+          <ButtonMain
+            version="secondary"
+            @click="createIsPreviewing = !createIsPreviewing"
+          >
+            {{ createIsPreviewing ? 'Edit' : 'Preview' }}
           </ButtonMain>
         </template>
       </div>
@@ -133,6 +139,7 @@ type SocialData = {
 }
 
 const route = useRoute()
+const createIsPreviewing = useState<boolean>('create-is-previewing')
 
 const { isLoggedIn, address, truncatedAddress } = storeToRefs(useUserStore())
 const { emit, events } = useEventsBus()
@@ -161,6 +168,9 @@ watch(route, ({ name }) => {
   switch (name) {
     case 'proposal-uid':
       headingType.value = HEADING.VOTE_INFORMATION
+      break
+    case 'create':
+      headingType.value = HEADING.NEW_PROPOSAL
       break
     default:
       headingType.value = HEADING.PROTOCOL_PROPOSALS

@@ -1,17 +1,38 @@
 <template>
   <component
-    :is="to ? 'NuxtLink' : 'button'"
-    class="grid gap-10 grid-flow-col place-content-center place-items-center px-24 rounded-max whitespace-nowrap select-none border-1 transition duration-200"
+    :is="to ? NuxtLink : 'button'"
+    class="
+      relative
+      px-24
+      rounded-max
+      whitespace-nowrap
+      select-none
+      border-1
+      transition
+      duration-200
+      before:absolute
+      before:left-0
+      before:top-0
+      before:w-full
+      before:h-full
+      before:rounded-inherit
+      before:origin-center
+      before:transition
+      before:duration-200
+    "
     :class="[
       isImportant ? 'h-60 typo-button-l' : 'h-40 typo-button-s',
       {
         'text-white bg-grey-200 border-primary border-opacity-0 hover:border-opacity-100 active:bg-primary': version === 'primary',
         'text-white border-grey-200 hover:border-primary active:border-primary active:bg-primary': version === 'secondary',
+        'text-white border-0 before:content-[\'\'] before:bg-grey-200 hover:before:bg-primary active:before:bg-primary active:before:scale-112.5 active:before:ease-reveal-xxl': version === 'tertiary',
+
         'text-success bg-success bg-opacity-25 border-success border-opacity-0 hover:border-opacity-100 active:border-opacity-100 active:bg-opacity-50': version === 'success-bg',
         'text-warning bg-warning bg-opacity-25 border-warning border-opacity-0 hover:border-opacity-100 active:border-opacity-100 active:bg-opacity-50': version === 'warning-bg',
         'text-error bg-error bg-opacity-25 border-error border-opacity-0 hover:border-opacity-100 active:border-opacity-100 active:bg-opacity-50': version === 'error-bg',
         'text-info bg-info bg-opacity-25 border-info border-opacity-0 hover:border-opacity-100 active:border-opacity-100 active:bg-opacity-50': version === 'info-bg',
         'text-white bg-white bg-opacity-25 border-white border-opacity-0 hover:border-opacity-100 active:border-opacity-100 active:bg-opacity-50': version === 'neutral-bg',
+
         'text-success bg-success bg-opacity-0 border-grey-200 hover:border-success active:bg-opacity-100 active:bg-success active:text-white': version === 'success-border',
         'text-warning bg-warning bg-opacity-0 border-grey-200 hover:border-warning active:bg-opacity-100 active:bg-warning active:text-white': version === 'warning-border',
         'text-error bg-error bg-opacity-0 border-grey-200 hover:border-error active:bg-opacity-100 active:bg-error active:text-white': version === 'error-border',
@@ -26,11 +47,14 @@
         target,
         type,
       })
+        .filter(([_, value]) => !!value)
         .reduce((accu, [key, value]) => ({ ...accu, ...!!value && { [key]: value } }), {}),
     }"
     @click="onClick"
   >
-    <slot />
+    <div class="relative grid gap-10 grid-flow-col place-content-center place-items-center">
+      <slot />
+    </div>
   </component>
 </template>
 
@@ -38,6 +62,7 @@
 type Version =
   | 'primary'
   | 'secondary'
+  | 'tertiary'
   | 'success-bg'
   | 'warning-bg'
   | 'error-bg'
@@ -86,6 +111,10 @@ const props = withDefaults(defineProps<Props>(), {
   type: null,
   isImportant: false,
   copiedText: '',
+})
+
+const NuxtLink = defineNuxtLink({
+  componentName: 'NuxtLink',
 })
 
 const { copyText } = useCopyText()
