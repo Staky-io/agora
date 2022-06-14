@@ -11,35 +11,34 @@
           class="w-84 h-auto"
         >
       </NuxtLink>
-      <div
-        v-if="isMounted"
-        class="grid gap-10 grid-flow-col items-center"
-      >
-        <ButtonIcon
-          name="Math/Plus"
-          :to="{ name: 'create' }"
-        />
-        <ButtonMain
-          v-if="!isLoggedIn"
-          @click="emit(events.POPUP_GUARD)"
-        >
-          Connect
-        </ButtonMain>
-        <template v-else-if="truncatedAddress">
-          <ButtonMain :copied-text="address">
-            {{ truncatedAddress }}
-            <UtilsIcon
-              class="w-20 h-20 text-grey-100"
-              name="Copy"
-            />
-          </ButtonMain>
+      <client-only>
+        <div class="grid gap-10 grid-flow-col items-center">
           <ButtonIcon
-            version="error"
-            name="Logout"
-            @click="emit(events.POPUP_GUARD)"
+            name="Math/Plus"
+            :to="{ name: 'create' }"
           />
-        </template>
-      </div>
+          <ButtonMain
+            v-if="!isLoggedIn"
+            @click="emit(events.POPUP_GUARD)"
+          >
+            Connect
+          </ButtonMain>
+          <template v-else-if="truncatedAddress">
+            <ButtonMain :copied-text="address">
+              {{ truncatedAddress }}
+              <UtilsIcon
+                class="w-20 h-20 text-grey-100"
+                name="Copy"
+              />
+            </ButtonMain>
+            <ButtonIcon
+              version="error"
+              name="Logout"
+              @click="emit(events.POPUP_GUARD)"
+            />
+          </template>
+        </div>
+      </client-only>
     </Container>
     <Container>
       <div
@@ -145,7 +144,6 @@ const { isLoggedIn, address, truncatedAddress } = storeToRefs(useUserStore())
 const { emit, events } = useEventsBus()
 
 const headingType = ref<HEADING>(null)
-const isMounted = ref<boolean>(false)
 const scrollRatio = ref<number>(0)
 const activeTabIndex = ref<number>(0)
 const tabsNames = ref<string[]>(['Proposals', 'New proposals'])
@@ -181,7 +179,6 @@ watch(route, ({ name }) => {
 onMounted(() => {
   window.addEventListener('scroll', onPageScroll)
   onPageScroll()
-  isMounted.value = true
 })
 
 onUnmounted(() => {
