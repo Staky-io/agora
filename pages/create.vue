@@ -52,10 +52,10 @@
       v-else
       :uid="uid"
       name="???"
-      :title="formState.title || '[Empty title]'"
+      :title="formStates.title || '[Empty title]'"
       :author="truncatedAddress || '[Unregistered author]'"
       status="Active"
-      :description="formState.description || '[Empty description]'"
+      :description="formStates.description || '[Empty description]'"
       :votes="{
         for: 0,
         against: 0,
@@ -71,7 +71,19 @@ import useVuelidate from '@vuelidate/core'
 import { required, url } from '@vuelidate/validators'
 import { useUserStore } from '@/stores/user'
 
-type FormeState = Record<'title' | 'description' | 'discussion', string>
+type FormStates = {
+  title: string
+  description: string
+  discussion: string
+}
+
+type FormValidators =
+  | typeof required
+  | typeof url
+
+type FormRules = {
+  [key in keyof FormStates]: Record<string, FormValidators>
+}
 
 const createIsPreviewing = useState<boolean>('create-is-previewing', () => false)
 
@@ -80,17 +92,15 @@ const { address, truncatedAddress } = storeToRefs(userStore)
 
 const uid = ref<string>(Date.now().toString(36) + Math.random().toString(36).split('.')[1])
 
-const formState = reactive<FormeState>({
+const formStates = reactive<FormStates>({
   title: null,
   description: null,
   discussion: null,
 })
 
-const rules = {
+const v$ = useVuelidate<FormStates, FormRules>({
   title: { required },
   description: {},
   discussion: { url },
-}
-
-const v$ = useVuelidate(rules, formState)
+}, formStates)
 </script>
