@@ -15,49 +15,49 @@
         v-if="currentProposal"
         class="grid gap-12"
       >
-        <CardProposal v-bind="currentProposal" />
+        <DisplaysCardProposal v-bind="currentProposal" />
         <div class="grid gap-20 grid-flow-col auto-cols-fr">
-          <CardVote
+          <DisplaysCardVote
             v-if="isLoggedIn && currentProposal.status === 'Active'"
             title="Cast your vote"
           >
             <div class="grid gap-24">
               <div class="grid gap-12 grid-cols-2">
-                <ButtonMain version="success-border">
+                <ControlsButtonAction version="success-border">
                   FOR
-                </ButtonMain>
-                <ButtonMain version="error-border">
+                </ControlsButtonAction>
+                <ControlsButtonAction version="error-border">
                   AGAINST
-                </ButtonMain>
-                <ButtonMain
+                </ControlsButtonAction>
+                <ControlsButtonAction
                   version="neutral-border"
                   class="col-span-2"
                 >
                   ABSTAIN
-                </ButtonMain>
+                </ControlsButtonAction>
               </div>
-              <ButtonMain>
+              <ControlsButtonAction>
                 Vote
-              </ButtonMain>
+              </ControlsButtonAction>
             </div>
-          </CardVote>
-          <CardVote title="Current result">
+          </DisplaysCardVote>
+          <DisplaysCardVote title="Current result">
             <div class="grid gap-20">
-              <DisplayVoteRange
+              <DisplaysStatProgress
                 version="success"
                 :name="currentProposal.name"
                 :choice="resultsVotes.for.choice"
                 :count="resultsVotes.for.count"
                 :ratio="resultsVotes.for.ratio"
               />
-              <DisplayVoteRange
+              <DisplaysStatProgress
                 version="error"
                 :name="currentProposal.name"
                 :choice="resultsVotes.against.choice"
                 :count="resultsVotes.against.count"
                 :ratio="resultsVotes.against.ratio"
               />
-              <DisplayVoteRange
+              <DisplaysStatProgress
                 version="neutral"
                 :name="currentProposal.name"
                 :choice="resultsVotes.abstain.choice"
@@ -65,7 +65,7 @@
                 :ratio="resultsVotes.abstain.ratio"
               />
             </div>
-          </CardVote>
+          </DisplaysCardVote>
         </div>
       </div>
     </client-only>

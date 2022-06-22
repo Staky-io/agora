@@ -21,7 +21,7 @@
             <br>
             Please use Google Chrome / Brave on desktop, or MyIconWallet app on mobile.
           </div>
-          <ButtonMain
+          <ControlsButtonAction
             v-for="(wallet, i) in compatibleWallets"
             v-else
             :key="`wallet-${i}`"
@@ -29,7 +29,7 @@
             @click="connectWallet(wallet.id)"
           >
             {{ wallet.name }}
-          </ButtonMain>
+          </ControlsButtonAction>
         </div>
         <div
           v-else-if="currentStep === LOGIN_STEPS.LEDGER"

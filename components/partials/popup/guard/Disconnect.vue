@@ -8,7 +8,7 @@
     </template>
     <template #body>
       <div class="grid gap-10">
-        <ButtonMain
+        <ControlsButtonAction
           version="secondary"
           :copied-text="address"
         >
@@ -17,13 +17,13 @@
             class="w-20 h-20 text-grey-100"
             name="Copy"
           />
-        </ButtonMain>
-        <ButtonMain
+        </ControlsButtonAction>
+        <ControlsButtonAction
           version="error-bg"
           @click="logoutOnClick"
         >
           Log out
-        </ButtonMain>
+        </ControlsButtonAction>
       </div>
     </template>
   </PartialsPopup>

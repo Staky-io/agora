@@ -13,25 +13,25 @@
       </NuxtLink>
       <client-only>
         <div class="grid gap-10 grid-flow-col items-center">
-          <ButtonIcon
+          <ControlsButtonIcon
             name="Math/Plus"
             :to="{ name: 'create' }"
           />
-          <ButtonMain
+          <ControlsButtonAction
             v-if="!isLoggedIn"
             @click="emit(events.POPUP_GUARD)"
           >
             Connect
-          </ButtonMain>
+          </ControlsButtonAction>
           <template v-else-if="truncatedAddress">
-            <ButtonMain :copied-text="address">
+            <ControlsButtonAction :copied-text="address">
               {{ truncatedAddress }}
               <UtilsIcon
                 class="w-20 h-20 text-grey-100"
                 name="Copy"
               />
-            </ButtonMain>
-            <ButtonIcon
+            </ControlsButtonAction>
+            <ControlsButtonIcon
               version="error"
               name="Logout"
               @click="emit(events.POPUP_GUARD)"
@@ -108,12 +108,12 @@
               </button>
             </p>
           </div>
-          <ButtonMain
+          <ControlsButtonAction
             version="secondary"
             @click="createIsPreviewing = !createIsPreviewing"
           >
             {{ createIsPreviewing ? 'Edit' : 'Preview' }}
-          </ButtonMain>
+          </ControlsButtonAction>
         </template>
       </div>
     </Container>

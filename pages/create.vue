@@ -16,14 +16,14 @@
       @submit.prevent
     >
       <div class="grid gap-32">
-        <FormInput
+        <ControlsFormInput
           v-model="v$.title.$model"
           :errors="v$.title.$errors"
           title="Title"
           tag="The title of your proposal"
           placeholder="e.g. Change protocol inflation to 7.4%"
         />
-        <FormInput
+        <ControlsFormInput
           v-model="v$.description.$model"
           :errors="v$.description.$errors"
           type="textarea"
@@ -32,7 +32,7 @@
           placeholder="The description of your proposal"
           :rows="12"
         />
-        <FormInput
+        <ControlsFormInput
           v-model="v$.discussion.$model"
           :errors="v$.discussion.$errors"
           title="Discussion (optional)"
@@ -40,15 +40,15 @@
           placeholder="e.g. https://forum.icon.community/proposal..."
         />
       </div>
-      <ButtonMain
+      <ControlsButtonAction
         version="tertiary"
         is-important
         type="submit"
       >
         Submit
-      </ButtonMain>
+      </ControlsButtonAction>
     </form>
-    <CardProposal
+    <DisplaysCardProposal
       v-else
       :uid="uid"
       name="???"

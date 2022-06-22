@@ -13,7 +13,7 @@
           :key="`proposal-${i}`"
           :to="{ name: 'proposal-uid', params: { uid: proposal.uid } }"
         >
-          <CardProposal v-bind="proposal" />
+          <DisplaysCardProposal v-bind="proposal" />
         </nuxt-link>
       </div>
     </client-only>
