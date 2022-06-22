@@ -84,7 +84,7 @@ const props = withDefaults(defineProps<Props>(), {
   rows: 8,
 })
 
-const model = computed({
+const model = computed<string>({
   get() {
     return props.modelValue
   },

@@ -47,8 +47,8 @@
 </template>
 
 <script setup lang="ts">
+import type { NuxtLinkProps } from '#app'
 import type { IconsNames } from '@/composables/useIconsComponents'
-import type { LinkTo } from '@/composables/useNuxtLink'
 
 type Version =
   | 'primary'
@@ -61,7 +61,7 @@ type Version =
 
 type Props = {
   version?: Version
-  to?: LinkTo
+  to?: NuxtLinkProps
   target?: '_self' | '_blank' | '_parent' | '_top'
   type?: 'submit' | 'reset' | 'button'
   name: IconsNames

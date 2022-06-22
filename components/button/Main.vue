@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import type { LinkTo } from '@/composables/useNuxtLink'
+import type { NuxtLinkProps } from '#app'
 
 type Version =
   | 'primary'
@@ -78,7 +78,7 @@ type Version =
 
 type Props = {
   version?: Version
-  to?: LinkTo
+  to?: NuxtLinkProps
   target?: '_self' | '_blank' | '_parent' | '_top'
   type?: 'submit' | 'reset' | 'button'
   isImportant?: boolean
