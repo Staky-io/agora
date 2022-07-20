@@ -11,7 +11,7 @@
         <div
           v-if="currentStep === LOGIN_STEPS.PICK"
           :key="LOGIN_STEPS.PICK"
-          class="grid"
+          class="grid gap-10"
         >
           <div v-if="!compatibleWallets.length">
             Sorry, this browser is not supported at the moment.
@@ -60,10 +60,10 @@
                       {{ id }}
                     </td>
                     <td class="px-20">
-                      {{ address }}
+                      {{ truncate({ string: address, start: 12, end: 16 }) }}
                     </td>
                     <td class="px-20">
-                      {{ balance }}
+                      {{ formatValue({ value: balance, hasSNA: true, suffix: 'ICX' }) }}
                     </td>
                     <td class="pl-20">
                       <button @click="selectLedgerAddress(address, path)">
@@ -87,10 +87,7 @@
               v-else-if="!ledgerStatus.error"
               key="loading"
             >
-              <h3>
-                Select a Ledger address
-              </h3>
-              <span>Loading...</span>
+              Select a Ledger address. <UtilsLoader />
             </div>
             <div
               v-else
@@ -109,6 +106,7 @@
 import { storeToRefs } from 'pinia'
 import { useDeviceStore } from '@/stores/device'
 import { useLedgerStore } from '@/stores/ledger'
+import { formatValue, truncate } from '@/assets/scripts/helpers'
 
 const isNonDesktopWarned = useState<boolean>('isNonDesktopWarned', () => false)
 
@@ -118,7 +116,7 @@ const { ledgerAddresses, ledgerStatus } = storeToRefs(ledgerStore)
 const { browser, device } = useDeviceStore()
 
 const { bus, events } = useEventsBus()
-const { notify } = useToastNotification()
+const { notify } = useNotificationToast()
 const {
   ICONEX_HANDLE_ACCOUNT,
   ICONEX_HANDLE_ADDRESS,
@@ -167,7 +165,7 @@ const walletsList = ref<WalletsList>([
   },
 ])
 
-const compatibleWallets = computed(
+const compatibleWallets = computed<WalletsList>(
   () => walletsList.value
     .filter((wallet) => wallet.compatibility.includes(device.isDesktop ? browser : 'mobile'))
     .map((wallet) => ({ ...wallet, isAvailable: true })),
@@ -211,8 +209,8 @@ onMounted(async () => {
     isNonDesktopWarned.value = true
 
     notify.info({
-      title: 'Claws on mobile',
-      message: 'To use Claws on Mobile, you have to download the MyICONWallet app and browse to this url with it.',
+      title: 'Agora on mobile',
+      message: 'To use Agora on Mobile, you have to download the MyICONWallet app and browse to this url with it.',
       timeout: 10000,
     })
   }

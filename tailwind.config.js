@@ -24,6 +24,8 @@ module.exports = {
       black: '#111111',
       white: '#F8FAFC',
 
+      primary: '#4F46E5',
+
       grey: {
         '000': '#F8FAFC',
         100: '#F1F5F9',
@@ -35,19 +37,6 @@ module.exports = {
         700: '#334155',
         800: '#1E293B',
         900: '#0F172A',
-      },
-
-      info: {
-        default: '#42B1FF',
-        100: '#3DA1EA',
-        200: '#3892D4',
-        300: '#3383BF',
-        400: '#2E73AA',
-        500: '#286495',
-        600: '#23557F',
-        700: '#1E456A',
-        800: '#193655',
-        900: '#14263F',
       },
 
       success: {
@@ -87,6 +76,19 @@ module.exports = {
         700: '#4F1A27',
         800: '#3A1928',
         900: '#241829',
+      },
+
+      info: {
+        default: '#42B1FF',
+        100: '#3DA1EA',
+        200: '#3892D4',
+        300: '#3383BF',
+        400: '#2E73AA',
+        500: '#286495',
+        600: '#23557F',
+        700: '#1E456A',
+        800: '#193655',
+        900: '#14263F',
       },
     },
     // Tailwind Utility : p-, m- etc.
@@ -370,13 +372,17 @@ module.exports = {
     transitionProperty: {
       all: 'all',
       none: 'none',
-      default: 'background-color, color, opacity, transform',
-      color: 'color',
-      background: 'background-color',
-      border: 'border-color, border-opacity',
+      default: 'color, background-color, border-color, border-opacity, opacity, transform',
       width: 'width',
       height: 'height',
       size: 'width, height',
+      margin: 'margin',
+      padding: 'padding',
+      spacing: 'margin, padding',
+      color: 'color',
+      background: 'background-color',
+      border: 'border-color, border-opacity',
+      layout: 'width, height, margin, padding, background-color, border-color, border-opacity',
       opacity: 'opacity',
       transform: 'transform',
       composite: 'opacity, transform',

@@ -6,7 +6,7 @@
     @mouseenter="isHovering = true"
     @mouseleave="isHovering = false"
   >
-    <button @click="closeNotification">
+    <button @click="closeNotificationToast">
       Close
     </button>
     <h3 v-if="title">
@@ -19,17 +19,18 @@
 </template>
 
 <script setup lang="ts">
-import type { NotificationTypes, NotificationPositions, NotificationProps } from '@/composables/useToastNotification'
+import type { IconsNames } from '@/composables/useIconsComponents'
+import type { NotificationToastTypes, NotificationToastPositions, NotificationToastProps } from '@/composables/useNotificationToast'
 
-// TODO: use `NotificationProps` type when Vue fixes the import (https://github.com/vuejs/core/issues/4294)
-const props = withDefaults(defineProps<{
+// TODO: use `NotificationToastProps` type when Vue handles the conditional props (https://github.com/vuejs/core/issues/4294)
+type Props = {
   uid: string
   isActive: boolean
   isVisible: boolean
-  type?: NotificationTypes
+  type?: NotificationToastTypes
   title?: string
   message?: string
-  position?: NotificationPositions
+  position?: NotificationToastPositions
   width?: number
   height?: number
   timeout?: number
@@ -37,12 +38,14 @@ const props = withDefaults(defineProps<{
   offsetY?: number
   offsetX?: number
   gap?: number
-}>(), {
+}
+
+const props = withDefaults(defineProps<Props>(), {
   type: null,
   title: null,
   message: null,
   position: 'top-right',
-  width: 300,
+  width: 350,
   height: null,
   timeout: 0,
   speed: 250,
@@ -51,15 +54,15 @@ const props = withDefaults(defineProps<{
   gap: 10,
 })
 
-const notifications = useState<NotificationProps[]>('notifications')
+const notificationsToast = useState<NotificationToastProps[]>('notifications-toast')
 
 const root = ref<HTMLElement | null>(null)
 const isHovering = ref<boolean>(false)
 const startDate = ref<number>(0)
 const pauseDate = ref<number>(0)
 const deltaTimeout = ref<number>(1)
-const notificationIndex = ref<number>(notifications.value.indexOf(notifications.value.find(({ uid }) => uid === props.uid)))
-const currentNotification = ref<NotificationProps>(notifications.value[notificationIndex.value])
+const notificationToastIndex = ref<number>(notificationsToast.value.indexOf(notificationsToast.value.find(({ uid }) => uid === props.uid)))
+const currentNotificationToast = ref<NotificationToastProps>(notificationsToast.value[notificationToastIndex.value])
 
 const [posY, posX]: string[] = props.position.split('-')
 const offsets = reactive<{
@@ -75,6 +78,21 @@ const offsets = reactive<{
 })
 
 const displayTimer = computed<string>(() => (props.timeout ? 'block' : 'none'))
+
+const notificationIcon = computed<IconsNames>(() => {
+  switch (props.type) {
+    case 'success':
+      return 'State/Success'
+    case 'warning':
+      return 'State/Warning'
+    case 'error':
+      return 'State/Error'
+    case 'info':
+      return 'State/Info'
+    default:
+      return 'Message'
+  }
+})
 
 const transitionDuration = computed<number>(() => Math.max(1, props.speed))
 
@@ -92,23 +110,23 @@ const translateOffsetX = computed<string>(() => {
 })
 
 const translateOffsetY = computed<string>(() => {
-  const notificationsPositionGroup = notifications.value.filter(({ position, isActive }) => isActive && (position === props.position || (!position && props.position === 'top-right')))
-  const notificationIndexInGroup = notificationsPositionGroup.indexOf(notificationsPositionGroup.find(({ uid }) => uid === props.uid))
-  const notificationsElderGroup = notificationsPositionGroup.filter((_, index) => index < notificationIndexInGroup)
-  const notificationOffset = notificationsElderGroup.reduce((accu, { height = 0, gap = props.gap }) => accu + height + gap, 0)
+  const notificationsToastPositionGroup = notificationsToast.value.filter(({ position, isActive }) => isActive && (position === props.position || (!position && props.position === 'top-right')))
+  const notificationToastIndexInGroup = notificationsToastPositionGroup.indexOf(notificationsToastPositionGroup.find(({ uid }) => uid === props.uid))
+  const notificationsToastElderGroup = notificationsToastPositionGroup.filter((_, index) => index < notificationToastIndexInGroup)
+  const notificationToastOffset = notificationsToastElderGroup.reduce((accu, { height = 0, gap = props.gap }) => accu + height + gap, 0)
 
   switch (posY) {
     case 'top':
-      return `${notificationOffset}px`
+      return `${notificationToastOffset}px`
     case 'bottom':
-      return `${-notificationOffset}px`
+      return `${-notificationToastOffset}px`
     default:
       return '0'
   }
 })
 
-const closeNotification = (): void => {
-  currentNotification.value.isVisible = false
+const closeNotificationToast = (): void => {
+  currentNotificationToast.value.isVisible = false
 }
 
 const closeTimeout = (): void => {
@@ -116,8 +134,8 @@ const closeTimeout = (): void => {
   deltaTimeout.value = Math.min(1, Math.max(0, 1 - (currentDate - startDate.value) / props.timeout))
 
   if (currentDate - startDate.value >= props.timeout) {
-    closeNotification()
-  } else if (currentNotification.value.isVisible && !isHovering.value) {
+    closeNotificationToast()
+  } else if (currentNotificationToast.value.isVisible && !isHovering.value) {
     requestAnimationFrame(closeTimeout)
   }
 }
@@ -133,26 +151,26 @@ if (props.timeout) {
   })
 }
 
-watch(currentNotification, ({ isVisible }) => {
+watch(currentNotificationToast, ({ isVisible }) => {
   if (!isVisible) {
     setTimeout(() => {
-      currentNotification.value.isActive = false
+      currentNotificationToast.value.isActive = false
     }, transitionDuration.value)
   }
 }, { deep: true })
 
 onMounted(() => {
-  currentNotification.value.height = root.value?.offsetHeight
+  currentNotificationToast.value.height = root.value?.offsetHeight
 
   if (props.title || props.message) {
-    currentNotification.value.isVisible = true
+    currentNotificationToast.value.isVisible = true
 
     if (props.timeout) {
       startDate.value = Date.now()
       closeTimeout()
     }
   } else {
-    closeNotification()
+    closeNotificationToast()
   }
 })
 </script>
@@ -181,7 +199,7 @@ onMounted(() => {
     display: v-bind(displayTimer);
     width: 100%;
     height: 4px;
-    background: black;
+    background: currentColor;
     transform: scaleX(v-bind(deltaTimeout));
     transform-origin: left;
     content: "";

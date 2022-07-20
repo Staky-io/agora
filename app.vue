@@ -1,4 +1,8 @@
 <template>
+  <UtilsNotificationBanner
+    v-if="notificationsBanner"
+    v-bind="notificationsBanner"
+  />
   <PartialsNavigationHeader />
   <NuxtPage />
   <transition name="fade">
@@ -12,20 +16,22 @@
       v-on="currentPopup.events"
     />
   </transition>
-  <UtilsToastNotification
-    v-for="(notification, i) in notifications"
-    :key="`notification-${i}`"
-    v-bind="notification"
+  <UtilsNotificationToast
+    v-for="(notificationToast, i) in notificationsToast"
+    :key="`notificationToast-${i}`"
+    v-bind="notificationToast"
   />
 </template>
 
 <script setup lang="ts">
-import type { NotificationProps } from '@/composables/useToastNotification'
+import type { NotificationBannerProps } from '@/composables/useNotificationBanner'
+import type { NotificationToastProps } from '@/composables/useNotificationToast'
 import { useDeviceStore } from '@/stores/device'
 import BrowserDetector from '@/assets/scripts/detectors/BrowserDetector.class'
 import DeviceDetector from '@/assets/scripts/detectors/DeviceDetector.class'
 
-const notifications = useState<NotificationProps[]>('notifications')
+const notificationsBanner = useState<NotificationBannerProps>('notifications-banner')
+const notificationsToast = useState<NotificationToastProps[]>('notifications-toast')
 
 const { setBrowser, setDevice } = useDeviceStore()
 const { bus, events } = useEventsBus()

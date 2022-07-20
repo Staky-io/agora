@@ -1,10 +1,14 @@
 import { defineStore } from 'pinia'
+import { truncate } from '@/assets/scripts/helpers'
 
 export const useUserStore = defineStore('user-store', () => {
   // States
   const isLoggedIn = ref<boolean>(false)
   const address = ref<string>('')
   const wallet = ref<string>('')
+
+  // Getters
+  const truncatedAddress = computed<string>(() => (address.value ? truncate(address.value) : ''))
 
   // Actions
   const loginUser = (params: { address?: string, wallet?: string }): void => {
@@ -30,6 +34,9 @@ export const useUserStore = defineStore('user-store', () => {
     isLoggedIn,
     address,
     wallet,
+
+    // Getters
+    truncatedAddress,
 
     // Actions
     loginUser,

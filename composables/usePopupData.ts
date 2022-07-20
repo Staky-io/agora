@@ -10,7 +10,7 @@ const basePopupData: PopupStructure = {
   params: {},
   events: {},
   callback: null,
-}
+} as const
 
 Object.freeze(basePopupData)
 

@@ -5,8 +5,8 @@ const popupsComponents = {
     Buy: markRaw(defineAsyncComponent(() => import('@/components/partials/popup/action/Buy.vue'))),
   },
   guard: {
-    LogIn: markRaw(defineAsyncComponent(() => import('@/components/partials/popup/guard/LogIn.vue'))),
-    LogOut: markRaw(defineAsyncComponent(() => import('@/components/partials/popup/guard/LogOut.vue'))),
+    Connect: markRaw(defineAsyncComponent(() => import('@/components/partials/popup/guard/Connect.vue'))),
+    Disconnect: markRaw(defineAsyncComponent(() => import('@/components/partials/popup/guard/Disconnect.vue'))),
   },
 }
 
@@ -57,7 +57,7 @@ export const usePopupMethods = () => {
 
   const POPUP_HANDLE_GUARD = ({ callback = null }: GuardParams = {}): void => {
     const { isLoggedIn } = useUserStore()
-    setCurrentPopup({ component: isLoggedIn ? popupsComponents.guard.LogOut : popupsComponents.guard.LogIn })
+    setCurrentPopup({ component: isLoggedIn ? popupsComponents.guard.Disconnect : popupsComponents.guard.Connect })
 
     if (callback) {
       callback()

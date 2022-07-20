@@ -2,12 +2,13 @@ import { defineStore } from 'pinia'
 
 import TransportWebHID from '@ledgerhq/hw-transport-webhid'
 import IconService from 'icon-sdk-js'
-import Icx from '~/assets/scripts/hw-app-icx/Icx'
+import Icx from '@/assets/scripts/libs/hw-app-icx/Icx'
 
 import { useUserStore } from '@/stores/user'
 
-const config = useRuntimeConfig()
-const url = config.iconNetwork === 'testnet' ? 'https://sejong.net.solidwallet.io/' : 'https://ctz.solidwallet.io/'
+const { iconNetwork } = useRuntimeConfig()
+const isTestnet = iconNetwork === 'testnet'
+const url = isTestnet ? 'https://sejong.net.solidwallet.io/' : 'https://ctz.solidwallet.io/'
 const provider = new IconService.HttpProvider(`${url}api/v3`)
 const iconService = new IconService(provider)
 
@@ -29,7 +30,7 @@ type LedgerAddressesList = LedgerAddressData[]
 
 export const useLedgerStore = defineStore('ledger-store', () => {
   const { emit, events } = useEventsBus()
-  const { notify } = useToastNotification()
+  const { notify } = useNotificationToast()
   const { loginUser } = useUserStore()
   const ITEMS_PER_PAGE = 5 as const
 
@@ -48,19 +49,21 @@ export const useLedgerStore = defineStore('ledger-store', () => {
       const transport = await TransportWebHID.create()
       const icx = new Icx(transport)
 
-      const ledgerBook: LedgerAddressesList = await Promise.all([...new Array(ITEMS_PER_PAGE)].map(async (_, index) => {
-        const id = ITEMS_PER_PAGE * page + index
-        const { address } = await icx.getAddress(`44'/4801368'/0'/0'/${id}'`)
+      const ledgerBook: LedgerAddressesList = []
+      for (let index = (ITEMS_PER_PAGE * page); index < ((ITEMS_PER_PAGE * page) + ITEMS_PER_PAGE); index++) {
+        // eslint-disable-next-line no-await-in-loop
+        const { address } = await icx.getAddress(`44'/4801368'/0'/0'/${index}'`)
+        // eslint-disable-next-line no-await-in-loop
         const result = await iconService.getBalance(String(address)).execute()
         const balance = IconService.IconConverter.toNumber(result) / 10 ** 18
-        return {
-          id,
+        ledgerBook.push({
+          id: index,
           address: String(address),
-          path: `44'/4801368'/0'/0'/${id}'`,
+          path: `44'/4801368'/0'/0'/${index}'`,
           balance,
           isLoading: false,
-        } as LedgerAddressData
-      }))
+        })
+      }
 
       return ledgerBook
     } catch (error) {
@@ -75,13 +78,15 @@ export const useLedgerStore = defineStore('ledger-store', () => {
       addressPath.value = path
       loginUser({ address, wallet: 'ledger' })
       emit(events.POPUP_CLOSE, { handlePending: true })
-      notify.error({
+      notify.success({
         title: 'Log in successful',
+        timeout: 5000,
       })
     } catch (error) {
       notify.error({
         title: 'Error',
         message: error,
+        timeout: 5000,
       })
     } finally {
       currentLedgerAddress.isLoading = false
@@ -97,10 +102,15 @@ export const useLedgerStore = defineStore('ledger-store', () => {
         ledgerStatus.currentPage = page
       })
       .catch((error) => {
-        ledgerStatus.error = error
+        const stringError = String(error)
+        let message = stringError
+        if (stringError.includes('TransportOpenUserCancelled')) message = 'Ledger connection canceled.'
+        else if (stringError.includes('TransportError')) message = 'Something wrong happened. Please retry later.'
+        ledgerStatus.error = message
         notify.error({
           title: 'Error',
-          message: error,
+          message,
+          timeout: 5000,
         })
       })
       .finally(() => {

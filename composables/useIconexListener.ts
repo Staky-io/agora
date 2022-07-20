@@ -36,7 +36,7 @@ type CancelParams = {
 }
 
 type RpcParams = {
-  payload: Record<string, unknown | never>
+  payload?: Record<string, unknown | never>
   error?: string
 }
 
@@ -87,7 +87,7 @@ type IconexResponse = Event & {
 export const useIconexListener = () => {
   const { loginUser } = useUserStore()
   const { emit, events } = useEventsBus()
-  const { notify } = useToastNotification()
+  const { notify } = useNotificationToast()
 
   const parsedEvent = ({ detail }: IconexResponse): ParserReponse => {
     const { type, payload } = detail
@@ -141,6 +141,7 @@ export const useIconexListener = () => {
       notify.error({
         title: 'Error',
         message: error,
+        timeout: 5000,
       })
     } else if (payload.hasAccount) {
       window.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
@@ -154,21 +155,26 @@ export const useIconexListener = () => {
       notify.error({
         title: 'Error',
         message: error,
+        timeout: 5000,
       })
     } else if (payload.address) {
       loginUser({ address: payload.address, wallet: 'iconex' })
       emit(events.POPUP_CLOSE, { handlePending: true })
-      notify.error({
+      notify.success({
         title: 'Log in successful',
+        timeout: 5000,
       })
     }
   }
 
-  const ICONEX_HANDLE_CANCEL = ({ error = '' }: CancelParams): void => {
+  const ICONEX_HANDLE_CANCEL = ({ error }: CancelParams): void => {
     if (error) {
+      emit(events.POPUP_CLOSE)
+
       notify.error({
         title: 'Error',
         message: error,
+        timeout: 5000,
       })
     }
   }

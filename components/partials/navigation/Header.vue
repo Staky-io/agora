@@ -1,5 +1,5 @@
 <template>
-  <header class="stcky top-0 py-10 bg-white shadow">
+  <header class="sticky top-0 py-10 bg-white shadow">
     <Container class="grid gap-20 grid-flow-col items-center justify-between">
       Header
       <div class="grid gap-10 grid-flow-col items-center">

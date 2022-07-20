@@ -87,7 +87,8 @@ module.exports = {
     },
   ],
   ignorePatterns: [
-    'modules/**/*.js',
+    'assets/scripts/libs/**/*.js',
+    'assets/scripts/libs/**/*.ts',
   ],
   globals: {
     $nuxt: true,

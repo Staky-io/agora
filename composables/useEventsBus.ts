@@ -9,7 +9,7 @@ type EventsParams =
   & IconexListenerEventsParams
   & PopupMethodsEventsParams
 
-const bus = ref(new Map())
+const bus = ref<Map<EventsNames, undefined | EventsParams[EventsNames]>>(new Map())
 
 export const useEventsBus = () => ({
   bus,

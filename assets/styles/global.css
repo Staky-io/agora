@@ -25,6 +25,10 @@ body {
   outline: 0 !important;
 }
 
+*::selection {
+  @apply text-primary bg-primary bg-opacity-25;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   margin: 0;
