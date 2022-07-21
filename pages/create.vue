@@ -19,7 +19,7 @@
         <ControlsFormInput
           v-model="v$.title.$model"
           :errors="v$.title.$errors"
-          title="Title"
+          label="Title"
           tag="The title of your proposal"
           placeholder="e.g. Change protocol inflation to 7.4%"
         />
@@ -27,7 +27,7 @@
           v-model="v$.description.$model"
           :errors="v$.description.$errors"
           type="textarea"
-          title="Description (optional)"
+          label="Description (optional)"
           tag="0/14,000"
           placeholder="The description of your proposal"
           :rows="12"
@@ -35,7 +35,7 @@
         <ControlsFormInput
           v-model="v$.discussion.$model"
           :errors="v$.discussion.$errors"
-          title="Discussion (optional)"
+          label="Discussion (optional)"
           tag="The forum link of your proposal"
           placeholder="e.g. https://forum.icon.community/proposal..."
         />

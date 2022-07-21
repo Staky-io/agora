@@ -3,9 +3,7 @@
     class="fixed top-0 left-0 grid w-screen h-screen z-100 py-10"
     @click="closeOnClick"
   >
-    <Container
-      class="grid gap-40"
-    >
+    <Container class="grid gap-40">
       <div
         class="grid gap-16 content-start justify-self-center self-center w-full p-20 bg-grey-300 rounded-20 transition-width duration-400"
         :class="{

@@ -6,12 +6,14 @@
   >
     <div class="grid gap-10 grid-cols-1fr-auto">
       <h2 class="text-white typo-title-m">
-        {{ title }}
+        {{ label }}
       </h2>
       <span
         v-if="tag"
         class="typo-text-regular"
-      >{{ tag }}</span>
+      >
+        {{ tag }}
+      </span>
     </div>
     <textarea
       v-if="type === 'textarea'"
@@ -20,6 +22,7 @@
       class="typo-paragraph"
       :placeholder="placeholder"
       :rows="rows"
+      :cols="cols"
     />
     <input
       v-else
@@ -28,6 +31,8 @@
       class="typo-paragraph"
       :type="type"
       :placeholder="placeholder"
+      :min="min"
+      :max="max"
     >
   </label>
 </template>
@@ -66,22 +71,29 @@ type Emits = {
 
 type Props = {
   modelValue?: string
-  title: string
+  label: string
   tag?: string
   type?: FormType
   placeholder?: string
   errors: ErrorObject[]
   rows?: number
+  cols?: number
+  min?: number
+  max?: number
 }
 
 const emit = defineEmits<Emits>()
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: '',
+  label: null,
   tag: null,
   type: 'text',
   placeholder: null,
   rows: 8,
+  cols: null,
+  min: null,
+  max: null,
 })
 
 const model = computed<string>({
