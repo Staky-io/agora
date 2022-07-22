@@ -12,7 +12,7 @@
     @mouseleave="isHovering = false"
   >
     <button
-      class="grid place-items-center w-20 h-20"
+      class="grid place-items-center w-20 h-20 hover:text-primary"
       @click="closeNotificationToast"
     >
       <UtilsIcon

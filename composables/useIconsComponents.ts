@@ -7,6 +7,7 @@ const icons = {
   'Chevron/Left': markRaw(defineAsyncComponent(() => import('@/assets/scripts/icons/Chevron/Left.vue'))),
   'Chevron/Right': markRaw(defineAsyncComponent(() => import('@/assets/scripts/icons/Chevron/Right.vue'))),
   'Chevron/Up': markRaw(defineAsyncComponent(() => import('@/assets/scripts/icons/Chevron/Up.vue'))),
+  'Logo/Agora': markRaw(defineAsyncComponent(() => import('@/assets/scripts/icons/Logo/Agora.vue'))),
   'Logo/Discord': markRaw(defineAsyncComponent(() => import('@/assets/scripts/icons/Logo/Discord.vue'))),
   'Logo/Github': markRaw(defineAsyncComponent(() => import('@/assets/scripts/icons/Logo/Github.vue'))),
   'Logo/Icon': markRaw(defineAsyncComponent(() => import('@/assets/scripts/icons/Logo/Icon.vue'))),

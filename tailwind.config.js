@@ -2,6 +2,8 @@ const plugin = require('tailwindcss/plugin')
 
 const { shareEntries, fractions, combineRules } = require('./helpers')
 
+const color = process.env.APP_COLOR
+
 module.exports = {
   theme: {
     // Tailwind Utility : xs:, s, etc.
@@ -21,10 +23,8 @@ module.exports = {
       current: 'currentColor',
       inherit: 'inherit',
 
-      black: '#111111',
       white: '#FFFFFF',
-      primary: '#0890FE',
-      craft: '#0C9D90',
+      primary: color,
 
       grey: {
         default: '#889DBC',
