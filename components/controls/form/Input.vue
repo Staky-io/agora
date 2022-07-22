@@ -5,7 +5,10 @@
     :class="{ [$style.hasErrors]: errors && errors.length }"
   >
     <div class="grid gap-10 grid-cols-1fr-auto">
-      <h2 class="text-white typo-title-m">
+      <h2
+        v-if="label"
+        class="text-white typo-title-m"
+      >
         {{ label }}
       </h2>
       <span
@@ -65,13 +68,15 @@ type FormType =
   | 'url'
   | 'week'
 
+type ModelValue = string | number
+
 type Emits = {
-  (event: 'update:modelValue', value: string): void
+  (event: 'update:modelValue', value: ModelValue): void
 }
 
 type Props = {
-  modelValue?: string
-  label: string
+  modelValue?: ModelValue
+  label?: string
   tag?: string
   type?: FormType
   placeholder?: string
@@ -85,7 +90,7 @@ type Props = {
 const emit = defineEmits<Emits>()
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: '',
+  modelValue: null,
   label: null,
   tag: null,
   type: 'text',
@@ -96,12 +101,19 @@ const props = withDefaults(defineProps<Props>(), {
   max: null,
 })
 
-const model = computed<string>({
+const model = computed<ModelValue>({
   get() {
     return props.modelValue
   },
   set(value) {
-    emit('update:modelValue', value)
+    switch (props.type) {
+      case 'number':
+        emit('update:modelValue', Number(value))
+        break
+      default:
+        emit('update:modelValue', value)
+        break
+    }
   },
 })
 </script>

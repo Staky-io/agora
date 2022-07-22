@@ -1,14 +1,15 @@
 {
   "name": "staky-nuxt3-starter",
   "version": "0.0.1",
-  "description": "Nuxt 3 starter by Staky",
+  "description": "Agora by Staky.io",
   "author": "Staky",
   "private": true,
   "scripts": {
     "build": "NODE_ENV=production nuxt build",
-    "dev": "NODE_ENV=development nuxt dev",
+    "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "start": "nuxt start",
     "commit": "git add . && commit",
     "push": "git push origin",
     "pull": "git pull --rebase",
@@ -32,7 +33,7 @@
     "@vuelidate/core": "^2.0.0-alpha.42",
     "@vuelidate/validators": "^2.0.0-alpha.30",
     "axios": "^0.27.2",
-    "icon-sdk-js": "^1.2.1",
+    "icon-sdk-js": "^0.0.18",
     "nuxt": "3.0.0-rc.3",
     "pinia": "^2.0.14",
     "pinia-plugin-persistedstate": "^1.6.1",
@@ -92,8 +93,5 @@
     "url-loader": "^4.1.1",
     "vue-loader": "^17.0.0",
     "webpack": "^5.73.0"
-  },
-  "engines": {
-    "node": "^14.14.0"
   }
 }

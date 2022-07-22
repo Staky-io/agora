@@ -138,7 +138,7 @@ type SocialData = {
 }
 
 const route = useRoute()
-const createIsPreviewing = useState<boolean>('create-is-previewing')
+const createIsPreviewing = useState<boolean>('create-is-previewing', () => false)
 
 const { isLoggedIn, address, truncatedAddress } = storeToRefs(useUserStore())
 const { emit, events } = useEventsBus()

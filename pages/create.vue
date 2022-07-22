@@ -87,8 +87,7 @@ type FormRules = {
 
 const createIsPreviewing = useState<boolean>('create-is-previewing', () => false)
 
-const userStore = useUserStore()
-const { address, truncatedAddress } = storeToRefs(userStore)
+const { address, truncatedAddress } = storeToRefs(useUserStore())
 
 const uid = ref<string>(Date.now().toString(36) + Math.random().toString(36).split('.')[1])
 

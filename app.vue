@@ -31,9 +31,6 @@ import { useProposalsStore } from '@/stores/proposals'
 import BrowserDetector from '@/assets/scripts/detectors/BrowserDetector.class'
 import DeviceDetector from '@/assets/scripts/detectors/DeviceDetector.class'
 
-const notificationsBanner = useState<NotificationBannerProps>('notifications-banner')
-const notificationsToast = useState<NotificationToastProps[]>('notifications-toast')
-
 const { setBrowser, setDevice } = useDeviceStore()
 const { fetchProposals } = useProposalsStore()
 const { bus, events } = useEventsBus()
@@ -44,6 +41,9 @@ const {
   POPUP_HANDLE_GUARD,
   POPUP_CALL_ACTION,
 } = usePopupMethods()
+
+const notificationsBanner = useState<NotificationBannerProps>('notifications-banner', () => null)
+const notificationsToast = useState<NotificationToastProps[]>('notifications-toast', () => [])
 
 watch(() => bus.value.get(events.POPUP_CLOSE), POPUP_CLOSE_CURRENT)
 watch(() => bus.value.get(events.POPUP_GUARD), POPUP_HANDLE_GUARD)

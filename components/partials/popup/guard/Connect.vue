@@ -1,6 +1,6 @@
 <template>
   <PartialsPopup
-    :size="currentStep === LOGIN_STEPS.LEDGER ? 'm' : 's'"
+    :size="currentStep === LOGIN_STEPS.LEDGER ? (!ledgerStatus.isFetching && ledgerAddresses.length ? 'l' : 'm') : 's'"
     require-button
   >
     <template #header>
@@ -34,8 +34,16 @@
         <div
           v-else-if="currentStep === LOGIN_STEPS.LEDGER"
           key="ledger"
+          class="grid gap-10"
         >
-          <button @click="currentStep = LOGIN_STEPS.PICK">
+          <button
+            class="grid gap-4 grid-flow-col items-center justify-self-start typo-button-s group"
+            @click="currentStep = LOGIN_STEPS.PICK"
+          >
+            <UtilsIcon
+              name="Chevron/Left"
+              class="w-12 h-12 mt-2 group-hover:-translate-x-2"
+            />
             Return
           </button>
           <transition
@@ -90,12 +98,14 @@
             <div
               v-else-if="!ledgerStatus.error"
               key="loading"
+              class="grid gap-6 grid-flow-col justify-between items-center px-12 py-10 text-info typo-paragraph bg-info bg-opacity-10 rounded-10"
             >
               Select a Ledger address. <UtilsLoader />
             </div>
             <div
               v-else
               key="error"
+              class="px-12 py-10 text-error typo-paragraph bg-error bg-opacity-10 rounded-10"
             >
               {{ ledgerStatus.error }}
             </div>

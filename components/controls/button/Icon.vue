@@ -40,8 +40,8 @@
     }"
   >
     <UtilsIcon
-      class="relative w-20 h-20"
       :name="name"
+      class="relative w-20 h-20"
     />
   </component>
 </template>

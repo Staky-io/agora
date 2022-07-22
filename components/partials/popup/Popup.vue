@@ -35,8 +35,6 @@
 </template>
 
 <script setup lang="ts">
-const { emit, events } = useEventsBus()
-
 type Sizes =
   | 's'
   | 'm'
@@ -53,6 +51,8 @@ withDefaults(defineProps<Props>(), {
   requireButton: false,
   size: 'm',
 })
+
+const { emit, events } = useEventsBus()
 
 const closeOnClick = (): void => {
   emit(events.POPUP_CLOSE)
