@@ -1,6 +1,6 @@
 <template>
-  <header class="sticky top-0 bg-grey-400 border-b-1 border-grey-200">
-    <Container class="grid gap-20 grid-flow-col items-center justify-between h-60">
+  <header class="sticky top-0">
+    <Container class="grid gap-20 grid-flow-col items-center justify-between h-60 bg-grey-400">
       <NuxtLink
         to="/"
         class="text-0 text-primary"
@@ -40,11 +40,11 @@
       </client-only>
     </Container>
     <client-only>
-      <Container>
-        <div
-          class="grid gap-20 items-center py-10 transition-height duration-400"
+      <div :class="$style.headingContainer">
+        <Container
+          class="grid gap-20 items-center py-10 bg-grey-400 transition-height duration-400"
           :class="[
-            $style.heading,
+            $style.headingWrapper,
             {
               [hasNavigationTab ? 'grid-cols-1fr-auto-1fr' : 'grid-cols-2']: headingType === 'protocol-proposals',
               '': headingType === 'vote-information',
@@ -121,8 +121,9 @@
               {{ createIsPreviewing ? 'Edit' : 'Preview' }}
             </ControlsButtonAction>
           </template>
-        </div>
-      </Container>
+        </Container>
+        <div class="w-screen h-1 bg-grey-200" />
+      </div>
     </client-only>
   </header>
 </template>
@@ -209,7 +210,11 @@ onUnmounted(() => {
   @return calc($min + v-bind(scrollRatio) * ($max - $min));
 }
 
-.heading {
+.headingContainer {
+  height: 110px;
+}
+
+.headingWrapper {
   height: calcScrollValue(60px, 110px);
 }
 

@@ -92,9 +92,9 @@ const { address, truncatedAddress } = storeToRefs(useUserStore())
 const uid = ref<string>(Date.now().toString(36) + Math.random().toString(36).split('.')[1])
 
 const formStates = reactive<FormStates>({
-  title: null,
-  description: null,
-  discussion: null,
+  title: '',
+  description: '',
+  discussion: '',
 })
 
 const v$ = useVuelidate<FormStates, FormRules>({
