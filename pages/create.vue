@@ -13,11 +13,12 @@
     <form
       v-if="!createIsPreviewing"
       class="grid gap-40 w-full max-w-576 mx-auto"
-      @submit.prevent
+      @submit.prevent="onSubmit"
     >
       <div class="grid gap-32">
         <ControlsFormInput
           v-model="v$.title.$model"
+          is-required
           :errors="v$.title.$errors"
           label="Title"
           tag="The title of your proposal"
@@ -68,6 +69,7 @@
 </template>
 
 <script setup lang="ts">
+import { create } from 'ipfs-http-client'
 import { storeToRefs } from 'pinia'
 import useVuelidate from '@vuelidate/core'
 import { required, url } from '@vuelidate/validators'
@@ -104,4 +106,22 @@ const v$ = useVuelidate<FormStates, FormRules>({
   description: {},
   discussion: { url },
 }, formStates)
+
+const onSubmit = async (): Promise<void> => {
+  const isValid = await v$.value.$validate()
+
+  if (isValid) {
+    try {
+      const data = JSON.stringify(formStates)
+      const client = create({ url: 'https://ipfs.infura.io:5001/api/v0' })
+      const added = await client.add(data)
+
+      console.log({ data, added })
+    } catch (error) {
+      console.error(error)
+    } finally {
+      console.log('Upload ended!')
+    }
+  }
+}
 </script>
