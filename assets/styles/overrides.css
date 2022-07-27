@@ -1,0 +1,91 @@
+#__nuxt .v-md-editor {
+  @apply bg-transparent border-1 border-grey-200 rounded-20 shadow-none transition-border duration-200 hover:border-primary;
+}
+
+#__nuxt .v-md-editor.focus {
+  @apply border-primary;
+}
+
+#__nuxt .v-md-editor li {
+  list-style-type: unset;
+}
+
+#__nuxt .v-md-editor__toolbar {
+  @apply p-12 border-grey-200;
+}
+
+#__nuxt .v-md-editor__toolbar-item {
+  @apply text-grey-100 rounded-5;
+}
+
+#__nuxt .v-md-editor__toolbar-item:hover {
+  @apply text-primary bg-primary bg-opacity-20;
+}
+
+#__nuxt .v-md-editor__toolbar-item--active,
+#__nuxt .v-md-editor__toolbar-item--active:hover {
+  @apply text-primary bg-primary bg-opacity-20;
+}
+
+#__nuxt .v-md-editor__menu {
+  @apply bg-grey-400 rounded-5 overflow-hidden;
+}
+
+#__nuxt .v-md-editor__menu--list {
+  @apply py-0;
+}
+
+#__nuxt .v-md-editor__menu,
+#__nuxt .v-md-editor__tooltip {
+  @apply shadow-lg;
+}
+
+#__nuxt .v-md-editor__menu--list .v-md-editor__menu-item {
+  @apply px-12;
+}
+
+#__nuxt .v-md-editor__menu-item {
+  @apply text-grey-100 bg-primary bg-opacity-5;
+}
+
+#__nuxt .v-md-editor__menu-item:hover {
+  @apply text-primary bg-opacity-20;
+}
+
+.v-md-editor__tooltip {
+  @apply flex;
+}
+
+#__nuxt .v-md-editor__tooltip {
+  @apply justify-center items-center font-inter text-primary bg-grey-400 rounded-5 overflow-hidden before:content-[""] before:absolute before:w-full before:h-full before:bg-primary before:bg-opacity-20;
+}
+
+#__nuxt .v-md-editor__toolbar-divider:before {
+  @apply border-grey-200;
+}
+
+#__nuxt .v-md-editor--editable .v-md-editor__editor-wrapper {
+  @apply border-grey-200;
+}
+
+#__nuxt .v-md-textarea-editor pre,
+#__nuxt .v-md-textarea-editor textarea {
+  @apply pr-24 pl-24 bg-transparent text-white text-14 font-inter font-medium placeholder:text-grey-100;
+}
+
+#__nuxt .scrollbar__thumb {
+  @apply bg-grey-200;
+}
+
+#__nuxt .github-markdown-body a {
+  @apply text-primary;
+}
+
+#__nuxt .github-markdown-body table tr {
+  @apply bg-transparent border-grey-200;
+}
+
+#__nuxt .github-markdown-body table td,
+#__nuxt .github-markdown-body table th {
+  @apply border-grey-200;
+}

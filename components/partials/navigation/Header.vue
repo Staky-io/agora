@@ -1,5 +1,5 @@
 <template>
-  <header class="sticky top-0">
+  <header class="sticky top-0 z-10">
     <Container class="grid gap-20 grid-flow-col items-center justify-between h-60 bg-grey-400">
       <NuxtLink
         to="/"

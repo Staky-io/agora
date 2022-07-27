@@ -24,6 +24,9 @@ export default defineNuxtConfig({
     },
   },
   css: [
+    '@kangc/v-md-editor/lib/style/base-editor.css',
+    '@kangc/v-md-editor/lib/style/preview.css',
+    '@kangc/v-md-editor/lib/theme/style/github.css',
     '~/assets/styles/tailwind.css',
     '~/assets/styles/fonts.css',
     '~/assets/styles/global.css',

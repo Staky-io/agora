@@ -15,7 +15,10 @@
         v-if="currentProposal"
         class="grid gap-12"
       >
-        <DisplaysCardProposal v-bind="currentProposal" />
+        <DisplaysCardProposal
+          is-full
+          v-bind="currentProposal"
+        />
         <div class="grid gap-20 grid-flow-col auto-cols-fr">
           <DisplaysCardVote
             v-if="isLoggedIn && currentProposal.status === 'Active'"

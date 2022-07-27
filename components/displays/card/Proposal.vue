@@ -14,7 +14,14 @@
       <h2 class="text-white typo-title-s">
         {{ title }}
       </h2>
-      <p class="overflow-hidden text-grey-100 typo-paragraph">
+      <VMdPreview
+        v-if="isFull"
+        :text="truncatedDescription"
+      />
+      <p
+        v-else
+        class="overflow-hidden text-grey-100 typo-paragraph"
+      >
         {{ truncatedDescription }}
       </p>
       <div class="text-grey-100 typo-caption">
@@ -38,9 +45,14 @@
 </template>
 
 <script setup lang="ts">
+import VMdPreview from '@kangc/v-md-editor/lib/preview'
+import githubTheme from '@kangc/v-md-editor/lib/theme/github'
+import hljs from 'highlight.js'
+import removeMd from 'remove-markdown'
 import { capitalize, truncate } from '@/assets/scripts/helpers'
 
 type Props = {
+  isFull?: boolean
   uid: string
   name: string
   title: string
@@ -59,12 +71,27 @@ type VoteStatus = {
   count: Props['votes'][keyof Props['votes']]
 }
 
-const props = defineProps<Props>()
+VMdPreview.use(githubTheme, {
+  Hljs: hljs,
+})
+
+const props = withDefaults(defineProps<Props>(), {
+  isFull: false,
+})
 
 const truncatedDescription = computed<string>(
-  () => (props.description.split(' ').length > 25
-    ? `${props.description.split(' ').filter((_, i) => i < 25).join(' ')}…`
-    : props.description),
+  () => (
+    !props.isFull && props.description.split(' ').length > 25
+      ? `${
+        removeMd(props.description)
+          .replaceAll('\n', ' ')
+          .replaceAll(/[ ]+/g, ' ')
+          .split(' ')
+          .filter((_, i) => i < 25)
+          .join(' ')
+      }…`
+      : props.description
+  ),
 )
 
 const votesStatus = computed<VoteStatus>(

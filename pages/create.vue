@@ -26,6 +26,7 @@
         <ControlsFormInput
           v-model="v$.description.$model"
           :errors="v$.description.$errors"
+          is-wysiwyg
           type="textarea"
           label="Description (optional)"
           tag="0/14,000"
@@ -50,6 +51,7 @@
     </form>
     <DisplaysCardProposal
       v-else
+      is-full
       :uid="uid"
       name="???"
       :title="formStates.title || '[Empty title]'"
@@ -87,7 +89,7 @@ type FormRules = {
 
 const createIsPreviewing = useState<boolean>('create-is-previewing', () => false)
 
-const { address, truncatedAddress } = storeToRefs(useUserStore())
+const { truncatedAddress } = storeToRefs(useUserStore())
 
 const uid = ref<string>(Date.now().toString(36) + Math.random().toString(36).split('.')[1])
 

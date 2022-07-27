@@ -28,15 +28,18 @@
     }
   },
   "dependencies": {
+    "@kangc/v-md-editor": "^2.3.15",
     "@ledgerhq/hw-transport-webhid": "^6.27.1",
     "@ledgerhq/hw-transport-webusb": "^6.27.1",
     "@vuelidate/core": "^2.0.0-alpha.42",
     "@vuelidate/validators": "^2.0.0-alpha.30",
     "axios": "^0.27.2",
+    "highlight.js": "^11.6.0",
     "icon-sdk-js": "^0.0.18",
     "nuxt": "3.0.0-rc.3",
     "pinia": "^2.0.14",
     "pinia-plugin-persistedstate": "^1.6.1",
+    "remove-markdown": "^0.5.0",
     "tailwindcss": "^3.0.24"
   },
   "devDependencies": {
@@ -51,6 +54,7 @@
     "@pinia/nuxt": "^0.1.9",
     "@rollup/plugin-commonjs": "^22.0.1",
     "@rollup/plugin-inject": "^4.0.4",
+    "@types/remove-markdown": "^0.3.1",
     "@types/tailwindcss": "^3.1.0",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
