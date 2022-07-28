@@ -1,6 +1,6 @@
 <template>
-  <header class="sticky top-0 z-10">
-    <Container class="grid gap-20 grid-flow-col items-center justify-between h-60 bg-grey-400">
+  <header class="sticky top-0 z-10 pointer-events-none">
+    <Container class="grid gap-20 grid-flow-col items-center justify-between h-60 bg-grey-400 pointer-events-auto">
       <NuxtLink
         to="/"
         class="text-0 text-primary"
@@ -42,7 +42,7 @@
     <client-only>
       <div :class="$style.headingContainer">
         <Container
-          class="grid gap-20 items-center py-10 bg-grey-400 transition-height duration-400"
+          class="grid gap-20 items-center py-10 bg-grey-400 transition-height duration-400 pointer-events-auto"
           :class="[
             $style.headingWrapper,
             {

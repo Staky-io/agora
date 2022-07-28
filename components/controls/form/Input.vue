@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO: handle errors UI -->
   <label
     class="grid gap-20"
     :class="{
@@ -7,7 +6,7 @@
       'hasErrors': errors && errors.length,
     }"
   >
-    <div class="grid gap-10 grid-cols-1fr-auto">
+    <div class="grid gap-10 grid-cols-1fr-auto items-baseline">
       <h2
         v-if="label"
         class="text-white typo-title-m"
@@ -42,7 +41,6 @@
         v-else-if="type === 'textarea'"
         v-model="model"
         :class="$style.input"
-        class="typo-paragraph"
         :placeholder="placeholder"
         :rows="rows"
         :cols="cols"
@@ -51,7 +49,6 @@
         v-else
         v-model="model"
         :class="$style.input"
-        class="typo-paragraph"
         :type="type"
         :placeholder="placeholder"
         :min="min"
@@ -106,13 +103,13 @@ type Emits = {
 }
 
 type Props = {
-  isRequired?: boolean
   modelValue?: ModelValue
+  errors: ErrorObject[]
+  isRequired?: boolean
   label?: string
   tag?: string
   type?: FormType
   placeholder?: string
-  errors: ErrorObject[]
   isWysiwyg?: boolean
   rows?: number
   cols?: number
@@ -235,7 +232,7 @@ onUnmounted(() => {
 }
 
 .input {
-  @apply px-24 py-20 text-white placeholder:text-grey-100 bg-transparent border-1 border-grey-200 rounded-20 transition-border duration-200 hover:border-primary active:border-primary focus:border-primary;
+  @apply px-24 py-20 text-white font-medium text-14 placeholder:text-grey-100 bg-transparent border-1 border-grey-200 rounded-20 transition-border duration-200 hover:border-primary active:border-primary focus:border-primary;
 }
 </style>
 

@@ -120,6 +120,7 @@ export const useLedgerStore = defineStore('ledger-store', () => {
 
   return {
     // States
+    addressPath,
     ledgerAddresses,
     ledgerStatus,
 
@@ -127,4 +128,4 @@ export const useLedgerStore = defineStore('ledger-store', () => {
     selectLedgerAddress,
     setLedgerPage,
   }
-})
+}, { persist: true })

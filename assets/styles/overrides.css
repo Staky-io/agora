@@ -40,24 +40,24 @@
   @apply shadow-lg;
 }
 
-#__nuxt .v-md-editor__menu--list .v-md-editor__menu-item {
-  @apply px-12;
-}
-
-#__nuxt .v-md-editor__menu-item {
-  @apply text-grey-100 bg-primary bg-opacity-5;
-}
-
-#__nuxt .v-md-editor__menu-item:hover {
-  @apply text-primary bg-opacity-20;
-}
-
 .v-md-editor__tooltip {
   @apply flex;
 }
 
 #__nuxt .v-md-editor__tooltip {
-  @apply justify-center items-center font-inter text-primary bg-grey-400 rounded-5 overflow-hidden before:content-[""] before:absolute before:w-full before:h-full before:bg-primary before:bg-opacity-20;
+  @apply justify-center items-center font-inter text-primary bg-grey-400 rounded-5 overflow-hidden;
+}
+
+#__nuxt .v-md-editor__menu--list .v-md-editor__menu-item {
+  @apply px-12;
+}
+
+#__nuxt .v-md-editor__menu-item {
+  @apply text-grey-100 bg-primary bg-opacity-5 transition-default duration-100;
+}
+
+#__nuxt .v-md-editor__menu-item:hover {
+  @apply text-primary bg-opacity-20;
 }
 
 #__nuxt .v-md-editor__toolbar-divider:before {
