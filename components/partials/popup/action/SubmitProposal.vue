@@ -50,6 +50,7 @@ import IconService from 'icon-sdk-js'
 import { storeToRefs } from 'pinia'
 import { useLedgerStore } from '@/stores/ledger'
 import { useUserStore } from '@/stores/user'
+import axios from 'axios'
 
 const { IconConverter, IconBuilder, IconAmount } = IconService
 const { CallTransactionBuilder } = IconBuilder
@@ -129,24 +130,24 @@ const paramsState: ParamsState = {
   ...props.discussion && { _discussion: props.discussion },
 }
 
-// try {
-//   const data = JSON.stringify(states)
-//   const client = create({ url: 'https://ipfs.infura.io:5001/api/v0' })
-//   const added = await client.add(data)
+let hash
+try {
+  // This endpoint is provided for free by Staky.io, this is compatible with Agora IPFS object only. Please use responsibly.
 
-//   console.log({ data, added })
-// } catch (error) {
-//   console.error(error)
-// }
+  hash = (await axios(`https://utils.craft.network/agoraPin?title=${paramsState._title}&description=${paramsState._description}&discussion=${paramsState._discussion}`)).data
+} catch (error) {
+  console.error(error)
+}
 
 const getSubmitProposalQuery = async (): Promise<Query> => {
   try {
-    const stepLimit = await getStepLimit(
-      address.value,
-      'submitProposal',
-      scoreAddress,
-      paramsState,
-    )
+    // const stepLimit = await getStepLimit(
+    //   address.value,
+    //   'submitProposal',
+    //   scoreAddress,
+    //   paramsState,
+    // )
+    const stepLimit = '0x1'
 
     const tx = new CallTransactionBuilder()
       .from(address.value)
@@ -158,11 +159,13 @@ const getSubmitProposalQuery = async (): Promise<Query> => {
       .timestamp((new Date()).getTime() * 1000)
       // .value((IconAmount.of(price * amount, IconAmount.Unit.ICX).toLoop()))
       .method('submitProposal')
-      .params(paramsState)
+      .params({
+        _ipfsHash: hash,
+        _endTime: expirationState.toString(),
+      })
       .build()
 
     console.log({ stepLimit })
-    debugger
 
     return {
       jsonrpc: '2.0',
