@@ -1,5 +1,9 @@
 import { abbreviation } from '@/assets/scripts/utils'
 
+export const capitalize = (string: string): string => `${string.charAt(0).toUpperCase()}${string.slice(1)}`
+
+const isWhole = (n: number): boolean => (n - Math.floor(n)) === 0
+
 type FormatValueParams = {
   value: number
   prefix?: string
@@ -8,17 +12,6 @@ type FormatValueParams = {
   hasSNA?: boolean
   limitSNA?: number
 }
-
-type TruncateParams = {
-  string: string
-  start?: number
-  end?: number
-}
-
-export const capitalize = (string: string): string => `${string.charAt(0).toUpperCase()}${string.slice(1)}`
-
-const isWhole = (n: number): boolean => (n - Math.floor(n)) === 0
-
 export const formatValue = ({
   value,
   prefix = '',
@@ -47,11 +40,22 @@ export const formatValue = ({
   return `${prefix}${mantissaCleared}${abbreviation[partIndex]} ${suffix}`.trim()
 }
 
-const truncateString = ({ string, start = 5, end = 5 }: TruncateParams): string => `${string.slice(0, start)}…${string.slice(string.length - end)}`
-export const truncate = (args: string | TruncateParams): string => (typeof args === 'string' ? truncateString({ string: args }) : truncateString(args))
+type SignatureKey = string | SignatureKey[]
+export const serializeTransaction = (array: SignatureKey[]): string => array
+  .filter((item) => !Array.isArray(item) || item.length)
+  .map((item) => (Array.isArray(item) ? `{${serializeTransaction(item)}}` : item))
+  .join('.')
 
 export const serializeQuery = (url: string, params: Record<string, string>) => (
   Object.keys(params).length
     ? `${url}?${new URLSearchParams(params).toString()}`
     : url
 )
+
+type TruncateParams = {
+  string: string
+  start?: number
+  end?: number
+}
+const truncateString = ({ string, start = 5, end = 5 }: TruncateParams): string => `${string.slice(0, start)}…${string.slice(string.length - end)}`
+export const truncate = (args: string | TruncateParams): string => (typeof args === 'string' ? truncateString({ string: args }) : truncateString(args))

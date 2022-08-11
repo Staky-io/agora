@@ -107,8 +107,8 @@ type FormRules = {
   [key in keyof FormStates]: Record<string, FormValidators>
 }
 
+const { emit, events } = useEventsBus()
 const createIsPreviewing = useState<boolean>('create-is-previewing', () => false)
-
 const { truncatedAddress } = storeToRefs(useUserStore())
 
 const uid = ref<string>(Date.now().toString(36) + Math.random().toString(36).split('.')[1])
@@ -131,34 +131,7 @@ const onSubmit = async (): Promise<void> => {
   const isValid = await v$.value.$validate()
 
   if (isValid) {
-    const states = { ...formStates, expiration: 0 }
-
-    switch (formStates.expiration) {
-      case EXPIRATION.THREE_DAYS:
-        states.expiration = (new Date(Date.now()).getTime() + 1000 * 60 * 60 * 24 * 3) * 1000
-        break
-      case EXPIRATION.SEVEN_DAYS:
-        states.expiration = (new Date(Date.now()).getTime() + 1000 * 60 * 60 * 24 * 7) * 1000
-        break
-      case EXPIRATION.FOURTEEN_DAYS:
-        states.expiration = (new Date(Date.now()).getTime() + 1000 * 60 * 60 * 24 * 14) * 1000
-        break
-      default:
-        states.expiration = (new Date(Date.now()).getTime() + 1000 * 60 * 60 * 24 * 14) * 1000
-        break
-    }
-
-    try {
-      const data = JSON.stringify(states)
-      const client = create({ url: 'https://ipfs.infura.io:5001/api/v0' })
-      const added = await client.add(data)
-
-      console.log({ data, added })
-    } catch (error) {
-      console.error(error)
-    } finally {
-      console.log('Upload ended!')
-    }
+    emit(events.POPUP_ACTION, { name: 'SubmitProposal', handleGuard: true, params: { ...formStates } })
   }
 }
 
