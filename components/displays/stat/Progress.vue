@@ -1,12 +1,23 @@
 <template>
-  <div class="grid gap-16">
-    <div class="grid gap-16 grid-flow-col justify-between">
-      <span class="uppercase text-grey-100 typo-text-medium">{{ choice }}</span>
-      <div>
-        <span class="text-grey-100 typo-text-regular">{{ count }}</span>
-        {{ ' ' }}
-        <span class="uppercase text-white typo-text-semibold">{{ name }}</span>
-        {{ ' ' }}
+  <div
+    class="grid gap-16"
+    :class="{ 'grid-cols-1fr-auto items-center': isMinified }"
+  >
+    <div
+      class="grid gap-16"
+      :class="isMinified ? 'order-last' : 'grid-flow-col justify-between'"
+    >
+      <span
+        v-if="!isMinified"
+        class="uppercase text-grey-100 typo-text-medium"
+      >
+        {{ choice }}
+      </span>
+      <div :class="{ 'grid place-items-center': isMinified }">
+        <template v-if="!isMinified">
+          <span class="text-grey-100 typo-text-regular">{{ count }}</span>
+          {{ ' ' }}
+        </template>
         <span
           class="typo-text-regular"
           :class="{
@@ -46,14 +57,16 @@ type Version =
   | 'neutral'
 
 type Props = {
+  isMinified?: boolean
   version: Version
-  name: string
   choice: string
   count: number
   ratio: number
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  isMinified: false,
+})
 
 const percent = computed<number>(() => props.ratio * 100)
 </script>

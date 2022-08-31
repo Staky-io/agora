@@ -25,13 +25,13 @@ export const useScoreService = () => {
   const { iconNetwork, scoreAddress } = useRuntimeConfig()
 
   const isTestnet: boolean = iconNetwork === 'testnet'
-  const url = isTestnet ? 'https://sejong.net.solidwallet.io/' : 'https://ctz.solidwallet.io/'
-  const debug = isTestnet ? 'https://sejong.net.solidwallet.io/api/v3d' : 'https://ctz.solidwallet.io/api/debug/v3'
-  const nid = isTestnet ? '83' : '1'
+  const url = isTestnet ? 'https://lisbon.net.solidwallet.io/' : 'https://ctz.solidwallet.io/'
+  const debug = isTestnet ? 'https://lisbon.net.solidwallet.io/api/v3d' : 'https://ctz.solidwallet.io/api/debug/v3'
+  const nid = isTestnet ? '2' : '1'
 
   const service = new IconService(new IconService.HttpProvider(`${url}api/v3`))
 
-  const SCORECallReadOnly = async (method: string, params?: ScoreParams): Promise<string> => {
+  const SCORECallReadOnly = async <T>(method: string, params?: ScoreParams): Promise<T> => {
     try {
       const txObj = new IconService.IconBuilder.CallBuilder()
         .to(scoreAddress)

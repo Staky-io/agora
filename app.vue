@@ -30,7 +30,6 @@ import type { NotificationBannerProps } from '@/composables/useNotificationBanne
 import type { NotificationToastProps } from '@/composables/useNotificationToast'
 import { useDeviceStore } from '@/stores/device'
 import { useImagesStore } from '@/stores/images'
-import { useProposalsStore } from '@/stores/proposals'
 import BrowserDetector from '@/assets/scripts/detectors/BrowserDetector.class'
 import DeviceDetector from '@/assets/scripts/detectors/DeviceDetector.class'
 
@@ -48,7 +47,6 @@ const [
 
 const { setBrowser, setDevice } = useDeviceStore()
 const { setImage } = useImagesStore()
-const { fetchProposals } = useProposalsStore()
 const { bus, events } = useEventsBus()
 const { listenIconex } = useIconexListener()
 const {
@@ -67,12 +65,11 @@ watch(() => bus.value.get(events.POPUP_CLOSE), POPUP_CLOSE_CURRENT)
 watch(() => bus.value.get(events.POPUP_GUARD), POPUP_HANDLE_GUARD)
 watch(() => bus.value.get(events.POPUP_ACTION), POPUP_CALL_ACTION)
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
   const { browser } = new BrowserDetector()
   const checks = new DeviceDetector()
   setBrowser(browser.toLowerCase())
   setDevice(checks)
   listenIconex()
-  await fetchProposals()
 })
 </script>

@@ -77,6 +77,10 @@
   @apply bg-grey-200;
 }
 
+#__nuxt .github-markdown-body {
+  @apply p-0;
+}
+
 #__nuxt .github-markdown-body a {
   @apply text-primary;
 }

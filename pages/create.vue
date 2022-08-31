@@ -66,7 +66,7 @@
       :uid="uid"
       name="???"
       :title="formStates.title || '[Empty title]'"
-      :author="truncatedAddress || '[Unregistered author]'"
+      :creator="truncatedAddress || '[Unregistered creator]'"
       status="Active"
       :description="formStates.description || '[Empty description]'"
       :votes="{

@@ -3,6 +3,7 @@ import { useUserStore } from '@/stores/user'
 const popupsComponents = {
   action: {
     SubmitProposal: markRaw(defineAsyncComponent(() => import('@/components/partials/popup/action/SubmitProposal.vue'))),
+    SubmitVote: markRaw(defineAsyncComponent(() => import('@/components/partials/popup/action/SubmitVote.vue'))),
   },
   guard: {
     Connect: markRaw(defineAsyncComponent(() => import('@/components/partials/popup/guard/Connect.vue'))),

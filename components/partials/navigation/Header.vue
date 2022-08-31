@@ -94,12 +94,6 @@
               <h2 class="typo-title-l">
                 Vote
               </h2>
-              <p class="text-grey-100 typo-text-medium">
-                You need to have a minimum of 100 “Staked CFT” in order to submit a proposal.
-                <button class="text-white typo-text-semibold transition-color duration-100 hover:text-primary">
-                  Learn more
-                </button>
-              </p>
             </div>
           </template>
           <template v-else-if="headingType === 'new-proposal'">

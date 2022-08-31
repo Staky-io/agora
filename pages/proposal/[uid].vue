@@ -26,43 +26,53 @@
           >
             <div class="grid gap-24">
               <div class="grid gap-12 grid-cols-2">
-                <ControlsButtonAction version="success-border">
+                <ControlsButtonAction
+                  version="success-border"
+                  :is-active="currentVote === 'for'"
+                  @click="currentVote = 'for'"
+                >
                   FOR
                 </ControlsButtonAction>
-                <ControlsButtonAction version="error-border">
+                <ControlsButtonAction
+                  version="error-border"
+                  :is-active="currentVote === 'against'"
+                  @click="currentVote = 'against'"
+                >
                   AGAINST
                 </ControlsButtonAction>
                 <ControlsButtonAction
                   version="neutral-border"
                   class="col-span-2"
+                  :is-active="currentVote === 'abstain'"
+                  @click="currentVote = 'abstain'"
                 >
                   ABSTAIN
                 </ControlsButtonAction>
               </div>
-              <ControlsButtonAction>
+              <ControlsButtonAction @click="onVote">
                 Vote
               </ControlsButtonAction>
             </div>
           </DisplaysCardVote>
-          <DisplaysCardVote title="Current result">
+          <DisplaysCardVote
+            title="Current result"
+            :subtitle="currentProposal.name"
+          >
             <div class="grid gap-20">
               <DisplaysStatProgress
                 version="success"
-                :name="currentProposal.name"
                 :choice="resultsVotes.for.choice"
                 :count="resultsVotes.for.count"
                 :ratio="resultsVotes.for.ratio"
               />
               <DisplaysStatProgress
                 version="error"
-                :name="currentProposal.name"
                 :choice="resultsVotes.against.choice"
                 :count="resultsVotes.against.count"
                 :ratio="resultsVotes.against.ratio"
               />
               <DisplaysStatProgress
                 version="neutral"
-                :name="currentProposal.name"
                 :choice="resultsVotes.abstain.choice"
                 :count="resultsVotes.abstain.count"
                 :ratio="resultsVotes.abstain.ratio"
@@ -80,19 +90,45 @@ import { storeToRefs } from 'pinia'
 import { useProposalsStore } from '@/stores/proposals'
 import { useUserStore } from '@/stores/user'
 
-const { currentProposal } = storeToRefs(useProposalsStore())
+const route = useRoute()
+const uid = route?.params?.uid
+
+const proposalsStore = useProposalsStore()
+const { fetchProposal } = proposalsStore
+const { currentProposal } = storeToRefs(proposalsStore)
 const { isLoggedIn } = useUserStore()
+const { emit, events } = useEventsBus()
+
+type VoteChoice = keyof typeof currentProposal.value.votes
 
 type Results = {
-  [choice in keyof typeof currentProposal.value.votes]: {
+  [choice in VoteChoice]: {
     choice: string
     count: number
     ratio: number
   }
 }
 
+const currentVote = ref<VoteChoice>(null)
+
 const resultsVotes = computed<Results>(() => {
   const totalCounts = Object.values(currentProposal.value.votes).reduce((accu, curr) => accu + curr, 0)
-  return Object.entries(currentProposal.value.votes).reduce((accu, [choice, count]) => ({ ...accu, [choice]: { choice, count, ratio: count / totalCounts } }), {}) as Results
+  return Object.entries(currentProposal.value.votes).reduce((accu, [choice, count]) => ({ ...accu, [choice]: { choice, count, ratio: totalCounts ? count / totalCounts : 0 } }), {}) as Results
+})
+
+const onVote = async (): Promise<void> => {
+  if (typeof uid === 'string' && currentVote.value) {
+    emit(events.POPUP_ACTION, { name: 'SubmitVote', handleGuard: true, params: { uid, vote: currentVote.value } })
+  }
+}
+
+onBeforeMount(async () => {
+  if (typeof uid === 'string') {
+    try {
+      await fetchProposal(uid)
+    } catch (error) {
+      navigateTo('/')
+    }
+  }
 })
 </script>

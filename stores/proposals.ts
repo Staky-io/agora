@@ -1,12 +1,19 @@
-import { defineStore } from 'pinia'
+/* eslint-disable no-underscore-dangle */
+import axios from 'axios'
+import IconService from 'icon-sdk-js'
+import { defineStore, storeToRefs } from 'pinia'
+import { useUserStore } from './user'
+
+const { IconConverter, IconBuilder } = IconService
+const { CallTransactionBuilder } = IconBuilder
 
 export type Proposal = {
   uid: string
   name: string
   title: string
-  author: string
-  status: 'Active' | 'Closed'
   description: string
+  creator: string
+  status: 'Active' | 'Closed'
   votes: {
     for: number
     against: number
@@ -14,21 +21,27 @@ export type Proposal = {
   }
 }
 
-type Range = Partial<Record<'min' | 'max', number>>
+type ProposalScore = {
+  _proposalId: string
+  _creator: string
+  _status: Proposal['status']
+  _abstainVoices: string
+  _forVoices: string
+  _againstVoices: string
+  _endTime: string
+  _ipfsHash: string
+}
 
-const capitalize = (string: string): string => `${string.charAt(0).toUpperCase()}${string.slice(1)}`
-const getRandomNumber = ({ min = 0, max = 1_000_000 }: Range): number => min + Math.floor(Math.random() * (max + 1))
-const createRandomWord = ({ length = 1, radix = 36, range }: { length?: number, radix?: number, range?: Range }): string => [...new Array(Math.max(1, length))]
-  .map(() => getRandomNumber(range).toString(radix))
-  .join('')
-const createRandomSentence = (length: number): string => [...new Array(Math.max(1, length))]
-  .map(() => createRandomWord({ length: 1 + Math.ceil(Math.random() * 9), range: { min: 10, max: 25 } }))
-  .join(' ')
-const createRandomParagraph = (length: number): string => [...new Array(Math.max(2, length))]
-  .map(() => capitalize(`${createRandomSentence(1 + Math.ceil(Math.random() * 9))}.`))
-  .join(' ')
+type ProposalIpfs = {
+  title: string
+  description: string
+  discussion: string
+}
+
+const getIpfs = (hash: string): string => `https://craft-network.mypinata.cloud/ipfs/${hash}`
 
 export const useProposalsStore = defineStore('proposals-store', () => {
+  const { SCORECallReadOnly } = useScoreService()
   const route = useRoute()
 
   // States
@@ -41,25 +54,50 @@ export const useProposalsStore = defineStore('proposals-store', () => {
   })
 
   // Actions
+  const fetchProposal = async (uid: string): Promise<void> => {
+    try {
+      if (!proposals.value.find(({ uid: proposalId }) => proposalId === uid)) {
+        const proposalDataFromScore = await SCORECallReadOnly<ProposalScore>('getProposal', { _proposalId: uid })
+        const proposalDataFromIpfs = await axios.get<ProposalIpfs>(getIpfs(proposalDataFromScore._ipfsHash)).then(({ data }) => data)
+
+        proposals.value.push({
+          uid: proposalDataFromScore._proposalId,
+          name: proposalDataFromIpfs.discussion || '',
+          title: proposalDataFromIpfs.title || '',
+          description: proposalDataFromIpfs.description || '',
+          creator: proposalDataFromScore._creator,
+          status: proposalDataFromScore._status,
+          votes: {
+            for: parseInt(proposalDataFromScore._forVoices, 16),
+            against: parseInt(proposalDataFromScore._againstVoices, 16),
+            abstain: parseInt(proposalDataFromScore._abstainVoices, 16),
+          },
+        })
+      }
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
   const fetchProposals = async (): Promise<void> => {
     try {
-      [...new Array(10)]
-        .map((): Proposal => ({
-          uid: Date.now().toString(36) + Math.random().toString(36).split('.')[1],
-          name: capitalize(createRandomWord({ length: 5 + Math.ceil(Math.random() * 5), range: { min: 10, max: 25 } })),
-          title: capitalize(createRandomSentence(Math.ceil(Math.random() * 5))),
-          author: `hx${[...new Array(40)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`,
-          status: Math.random() < 0.5 ? 'Active' : 'Closed',
-          description: createRandomParagraph(Math.ceil(Math.random() * 10)),
+      const lastId = parseInt(await SCORECallReadOnly('lastProposalId'), 16)
+      const proposalsDataFromScore = await Promise.all([...new Array(lastId)].map(() => SCORECallReadOnly<ProposalScore>('getProposal', { _proposalId: `0x${parseFloat(`${lastId}`).toString(16)}` })))
+      const proposalsDataFromIpfs = await Promise.all(proposalsDataFromScore.map(({ _ipfsHash }) => axios.get<ProposalIpfs>(getIpfs(_ipfsHash)).then(({ data }) => data)))
+
+      proposals.value = [...new Array(proposalsDataFromScore.length)]
+        .map((_, index): Proposal => ({
+          uid: proposalsDataFromScore[index]._proposalId,
+          name: proposalsDataFromIpfs[index].discussion || '',
+          title: proposalsDataFromIpfs[index].title || '',
+          description: proposalsDataFromIpfs[index].description || '',
+          creator: proposalsDataFromScore[index]._creator,
+          status: proposalsDataFromScore[index]._status,
           votes: {
-            for: getRandomNumber({ max: 1000 }),
-            against: getRandomNumber({ max: 1000 }),
-            abstain: getRandomNumber({ max: 1000 }),
+            for: parseInt(proposalsDataFromScore[index]._forVoices, 16),
+            against: parseInt(proposalsDataFromScore[index]._againstVoices, 16),
+            abstain: parseInt(proposalsDataFromScore[index]._abstainVoices, 16),
           },
         }))
-        .forEach((proposal) => {
-          proposals.value.push(proposal)
-        })
     } catch (error) {
       throw new Error(error)
     }
@@ -73,6 +111,7 @@ export const useProposalsStore = defineStore('proposals-store', () => {
     // Getters
 
     // Actions
+    fetchProposal,
     fetchProposals,
   }
 })

@@ -3,10 +3,10 @@
     <template #header>
       <h2>
         <client-only>
-          <template v-if="ACTION_SUBMITPROPOSAL.tx.hash">
-            Your proposal has been submitted!
+          <template v-if="ACTION_SUBMITVOTE.tx.hash">
+            Your vote has been submitted!
           </template>
-          <template v-else-if="ACTION_SUBMITPROPOSAL.isLoading || ACTION_SUBMITPROPOSAL.isWaiting">
+          <template v-else-if="ACTION_SUBMITVOTE.isLoading || ACTION_SUBMITVOTE.isWaiting">
             Submitting...
           </template>
         </client-only>
@@ -19,12 +19,12 @@
       >
         <!-- SUCCESS -->
         <div
-          v-if="ACTION_SUBMITPROPOSAL.tx.hash"
+          v-if="ACTION_SUBMITVOTE.tx.hash"
           key="success"
           class="grid gap-20"
         >
           <span>
-            Congratulations! The proposal has been submitted.
+            Congratulations! The vote has been submitted.
           </span>
           <ControlsButtonAction @click="closePopup">
             Close
@@ -32,12 +32,12 @@
         </div>
         <!-- LOADING -->
         <div
-          v-else-if="ACTION_SUBMITPROPOSAL.isLoading || ACTION_SUBMITPROPOSAL.isWaiting"
+          v-else-if="ACTION_SUBMITVOTE.isLoading || ACTION_SUBMITVOTE.isWaiting"
           key="loading"
           class="grid gap-20"
         >
           <span>
-            Your proposal is being submitted. Please wait for few minutes.
+            Your vote is being submitted. Please wait for few minutes.
           </span>
         </div>
       </transition>
@@ -56,10 +56,8 @@ const { IconConverter, IconBuilder, IconAmount } = IconService
 const { CallTransactionBuilder } = IconBuilder
 
 type Props = {
-  title: string
-  description?: string
-  discussion?: string
-  expiration: string | number
+  uid: string
+  vote?: string
 }
 
 type ActionData = {
@@ -94,7 +92,7 @@ const { address, wallet } = storeToRefs(useUserStore())
 const nid = iconNetwork === 'testnet' ? '83' : '1'
 
 const isGlobalListening = ref<boolean>(false)
-const ACTION_SUBMITPROPOSAL = reactive<ActionData>({
+const ACTION_SUBMITVOTE = reactive<ActionData>({
   type: 'RPC',
   tx: {},
   query: {},
@@ -104,42 +102,12 @@ const ACTION_SUBMITPROPOSAL = reactive<ActionData>({
   isSuccess: false,
 })
 
-type ParamsState = {
-  [key in `_${keyof Props}`]: Props[keyof Props]
+const paramsState = {
+  _proposalId: props.uid,
+  _vote: props.vote,
 }
 
-let expirationState = 0
-switch (props.expiration) {
-  case '3 days':
-    expirationState = (new Date(Date.now()).getTime() + 1000 * 60 * 60 * 24 * 3) * 1000
-    break
-  case '7 days':
-    expirationState = (new Date(Date.now()).getTime() + 1000 * 60 * 60 * 24 * 7) * 1000
-    break
-  case '14 days':
-    expirationState = (new Date(Date.now()).getTime() + 1000 * 60 * 60 * 24 * 14) * 1000
-    break
-  default:
-    expirationState = (new Date(Date.now()).getTime() + 1000 * 60 * 60 * 24 * 14) * 1000
-    break
-}
-const paramsState: ParamsState = {
-  _title: props.title,
-  _expiration: expirationState,
-  ...props.description && { _description: props.description },
-  ...props.discussion && { _discussion: props.discussion },
-}
-
-let ipfsHash: string
-try {
-  // This endpoint is provided for free by Staky.io, this is compatible with Agora IPFS object only. Please use responsibly.
-  // eslint-disable-next-line no-underscore-dangle
-  ipfsHash = (await axios(`https://utils.craft.network/agoraPin?title=${paramsState._title}&description=${paramsState._description}&discussion=${paramsState._discussion}`)).data
-} catch (error) {
-  console.error(error)
-}
-
-const getSubmitProposalQuery = async (): Promise<Query> => {
+const getSubmitVoteQuery = async (): Promise<Query> => {
   try {
     const tx = new CallTransactionBuilder()
       .from(address.value)
@@ -150,11 +118,8 @@ const getSubmitProposalQuery = async (): Promise<Query> => {
       .version(IconConverter.toBigNumber('3'))
       .timestamp((new Date()).getTime() * 1000)
       // .value((IconAmount.of(price * amount, IconAmount.Unit.ICX).toLoop()))
-      .method('submitProposal')
-      .params({
-        _ipfsHash: ipfsHash,
-        _endTime: expirationState.toString(),
-      })
+      .method('vote')
+      .params(paramsState)
       .build()
 
     return {
@@ -173,7 +138,7 @@ const getSubmitProposalQuery = async (): Promise<Query> => {
   }
 }
 
-const makeSubmitProposalQuery = async (hash: string): Promise<{ block: unknown, tx: { txHash: string } }> => new Promise((resolve, reject) => {
+const makeSubmitVoteQuery = async (hash: string): Promise<{ block: unknown, tx: { txHash: string } }> => new Promise((resolve, reject) => {
   try {
     const interval = setInterval(async () => {
       const tx = await getTxResult(hash)
@@ -193,25 +158,25 @@ const makeSubmitProposalQuery = async (hash: string): Promise<{ block: unknown, 
   }
 })
 
-const RESET_SUBMITPROPOSAL = (): void => {
-  ACTION_SUBMITPROPOSAL.tx = {}
-  ACTION_SUBMITPROPOSAL.query = {}
-  ACTION_SUBMITPROPOSAL.isListening = false
-  ACTION_SUBMITPROPOSAL.isWaiting = false
-  ACTION_SUBMITPROPOSAL.isLoading = false
-  ACTION_SUBMITPROPOSAL.isSuccess = false
+const RESET_SUBMITVOTE = (): void => {
+  ACTION_SUBMITVOTE.tx = {}
+  ACTION_SUBMITVOTE.query = {}
+  ACTION_SUBMITVOTE.isListening = false
+  ACTION_SUBMITVOTE.isWaiting = false
+  ACTION_SUBMITVOTE.isLoading = false
+  ACTION_SUBMITVOTE.isSuccess = false
 }
 
 const RESET_LISTENER = (): void => {
   isGlobalListening.value = false
-  RESET_SUBMITPROPOSAL()
+  RESET_SUBMITVOTE()
 }
 
-const CALLBACK_SUBMITPROPOSAL = (hash: string): void => {
+const CALLBACK_SUBMITVOTE = (hash: string): void => {
   try {
-    RESET_SUBMITPROPOSAL()
-    ACTION_SUBMITPROPOSAL.tx = { hash }
-    ACTION_SUBMITPROPOSAL.isSuccess = true
+    RESET_SUBMITVOTE()
+    ACTION_SUBMITVOTE.tx = { hash }
+    ACTION_SUBMITVOTE.isSuccess = true
   } catch (error) {
     notify.error({
       title: 'Error',
@@ -221,14 +186,14 @@ const CALLBACK_SUBMITPROPOSAL = (hash: string): void => {
   }
 }
 
-const COMPLETE_SUBMITPROPOSAL = async (hash: string): Promise<void> => {
+const COMPLETE_SUBMITVOTE = async (hash: string): Promise<void> => {
   try {
-    ACTION_SUBMITPROPOSAL.isWaiting = false
-    ACTION_SUBMITPROPOSAL.isLoading = true
-    const { tx } = await makeSubmitProposalQuery(hash)
-    CALLBACK_SUBMITPROPOSAL(tx.txHash)
+    ACTION_SUBMITVOTE.isWaiting = false
+    ACTION_SUBMITVOTE.isLoading = true
+    const { tx } = await makeSubmitVoteQuery(hash)
+    CALLBACK_SUBMITVOTE(tx.txHash)
   } catch (error) {
-    RESET_SUBMITPROPOSAL()
+    RESET_SUBMITVOTE()
 
     notify.error({
       title: 'Error',
@@ -250,9 +215,9 @@ const HANDLE_RPC = async (payload): Promise<void> => {
     })
   } else if (result) {
     isGlobalListening.value = false
-    if (ACTION_SUBMITPROPOSAL.type === 'RPC' && ACTION_SUBMITPROPOSAL.isListening) {
-      ACTION_SUBMITPROPOSAL.isListening = false
-      await COMPLETE_SUBMITPROPOSAL(result)
+    if (ACTION_SUBMITVOTE.type === 'RPC' && ACTION_SUBMITVOTE.isListening) {
+      ACTION_SUBMITVOTE.isListening = false
+      await COMPLETE_SUBMITVOTE(result)
     }
   }
 }
@@ -296,24 +261,24 @@ const TX_ROUTER = async ({ type, payload }: { type: string, payload: Query }): P
   }
 }
 
-const DISPATCH_SUBMITPROPOSAL = async (): Promise<void> => {
-  ACTION_SUBMITPROPOSAL.query = {
+const DISPATCH_SUBMITVOTE = async (): Promise<void> => {
+  ACTION_SUBMITVOTE.query = {
     address: address.value,
     score: scoreAddress,
     params: paramsState,
   }
 
-  const query = await getSubmitProposalQuery()
+  const query = await getSubmitVoteQuery()
 
   isGlobalListening.value = true
-  ACTION_SUBMITPROPOSAL.isWaiting = true
-  ACTION_SUBMITPROPOSAL.isListening = true
+  ACTION_SUBMITVOTE.isWaiting = true
+  ACTION_SUBMITVOTE.isListening = true
 
   TX_ROUTER({ type: 'REQUEST_JSON-RPC', payload: query })
 }
 
 const closePopup = (): void => {
-  RESET_SUBMITPROPOSAL()
+  RESET_SUBMITVOTE()
   emit(events.POPUP_CLOSE)
 }
 
@@ -325,6 +290,6 @@ watch(() => bus.value.get(events.ICONEX_CANCEL), () => {
 watch(() => bus.value.get(events.ICONEX_RPC), HANDLE_RPC)
 
 onMounted(async () => {
-  await DISPATCH_SUBMITPROPOSAL()
+  await DISPATCH_SUBMITVOTE()
 })
 </script>

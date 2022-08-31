@@ -1,12 +1,12 @@
 <template>
-  <article class="grid gap-32 grid-flow-col justify-between items-start p-32 text-left rounded-30 border-1 border-grey-200 border-opacity-0 hover:border-opacity-100 transition-border duration-200">
+  <article class="grid gap-32 grid-cols-1fr-auto justify-between items-start p-32 text-left rounded-30 border-1 border-grey-200 border-opacity-0 hover:border-opacity-100 transition-border duration-200">
     <div class="grid gap-10 max-w-640">
       <div class="grid gap-10 grid-flow-col items-center justify-start">
         <div class="w-24 h-24 bg-grey-200 rounded-full" />
         <div class="text-grey-100">
           <span class="typo-text-semibold">{{ name }} by</span>
           {{ ' ' }}
-          <span class="text-white typo-text-medium">{{ /hx[a-f0-9]{40,40}/.test(author) ? truncate(author) : author }}</span>
+          <span class="text-white typo-text-medium">{{ /hx[a-f0-9]{40,40}/.test(creator) ? truncate(creator) : creator }}</span>
           {{ ' ' }}
           <span class="typo-text-regular">Core</span>
         </div>
@@ -24,18 +24,27 @@
       >
         {{ truncatedDescription }}
       </p>
-      <div class="text-grey-100 typo-caption">
+      <div
+        v-if="totalCounts"
+        class="grid grid-cols-auto-1fr items-center gap-24"
+      >
         <span
+          class="typo-caption"
           :class="{
             'text-success': votesStatus.choice === 'for',
             'text-error': votesStatus.choice === 'against',
             'text-white': votesStatus.choice === 'abstain',
           }"
         >
-          {{ capitalize(votesStatus.choice) }} - {{ votesStatus.count }}
+          {{ capitalize(votesStatus.choice) }}: {{ votesStatus.count }}
         </span>
-        {{ ' ' }}
-        {{ name }}
+        <DisplaysStatProgress
+          is-minified
+          :version="progressVersion"
+          :choice="votesStatus.choice"
+          :count="votesStatus.count"
+          :ratio="votesStatus.ratio"
+        />
       </div>
     </div>
     <UtilsChip :version="status === 'Active' ? 'success' : 'error'">
@@ -56,7 +65,7 @@ type Props = {
   uid: string
   name: string
   title: string
-  author: string
+  creator: string
   status: 'Active' | 'Closed'
   description: string
   votes: {
@@ -69,6 +78,7 @@ type Props = {
 type VoteStatus = {
   choice: keyof Props['votes']
   count: Props['votes'][keyof Props['votes']]
+  ratio: number
 }
 
 VMdPreview.use(githubTheme, {
@@ -94,8 +104,26 @@ const truncatedDescription = computed<string>(
   ),
 )
 
+const totalCounts = computed<number>(() => Object.values(props.votes).reduce((accu, curr) => accu + curr, 0))
+
 const votesStatus = computed<VoteStatus>(
   () => Object.entries(props.votes)
-    .reduce((accu, [choice, count]) => (count > accu.count ? { choice, count } : accu), { choice: 'for', count: props.votes.for }) as VoteStatus,
+    .reduce(
+      (accu, [choice, count]) => (count > accu.count ? { choice, count, ratio: totalCounts.value ? count / totalCounts.value : 0 } : accu),
+      { choice: 'for', count: props.votes.for, ratio: totalCounts.value ? props.votes.for / totalCounts.value : 0 },
+    ) as VoteStatus,
 )
+
+const progressVersion = computed(() => {
+  switch (votesStatus.value.choice) {
+    case 'for':
+      return 'success'
+    case 'abstain':
+      return 'neutral'
+    case 'against':
+      return 'error'
+    default:
+      return 'neutral'
+  }
+})
 </script>

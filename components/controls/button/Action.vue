@@ -22,7 +22,7 @@
     "
     :class="[
       isImportant ? 'h-60 typo-button-l' : 'h-40 typo-button-s',
-      {
+      !isActive ? {
         'text-white bg-grey-200 border-primary border-opacity-0 hover:border-opacity-100 active:bg-primary': version === 'primary',
         'text-white border-grey-200 hover:border-primary active:border-primary active:bg-primary': version === 'secondary',
         'text-white border-0 before:content-[\'\'] before:bg-grey-200 hover:before:bg-primary active:before:bg-primary active:before:scale-112.5 active:before:ease-reveal-xxl': version === 'tertiary',
@@ -33,11 +33,27 @@
         'text-info bg-info bg-opacity-25 border-info border-opacity-0 hover:border-opacity-100 active:border-opacity-100 active:bg-opacity-50': version === 'info-bg',
         'text-white bg-white bg-opacity-25 border-white border-opacity-0 hover:border-opacity-100 active:border-opacity-100 active:bg-opacity-50': version === 'neutral-bg',
 
-        'text-success bg-success bg-opacity-0 border-grey-200 hover:border-success active:bg-opacity-100 active:bg-success active:text-white': version === 'success-border',
-        'text-warning bg-warning bg-opacity-0 border-grey-200 hover:border-warning active:bg-opacity-100 active:bg-warning active:text-white': version === 'warning-border',
-        'text-error bg-error bg-opacity-0 border-grey-200 hover:border-error active:bg-opacity-100 active:bg-error active:text-white': version === 'error-border',
-        'text-info bg-info bg-opacity-0 border-grey-200 hover:border-info active:bg-opacity-100 active:bg-info active:text-white': version === 'info-border',
-        'text-white bg-white bg-opacity-0 border-grey-200 hover:border-white active:bg-opacity-100 active:bg-white active:text-grey-400': version === 'neutral-border',
+        'text-success bg-success bg-opacity-0 border-grey-200 hover:border-success active:bg-opacity-100 active:bg-success active:border-success active:text-white': version === 'success-border',
+        'text-warning bg-warning bg-opacity-0 border-grey-200 hover:border-warning active:bg-opacity-100 active:bg-warning active:border-warning active:text-white': version === 'warning-border',
+        'text-error bg-error bg-opacity-0 border-grey-200 hover:border-error active:bg-opacity-100 active:bg-error active:border-error active:text-white': version === 'error-border',
+        'text-info bg-info bg-opacity-0 border-grey-200 hover:border-info active:bg-opacity-100 active:bg-info active:border-info active:text-white': version === 'info-border',
+        'text-white bg-white bg-opacity-0 border-grey-200 hover:border-white active:bg-opacity-100 active:bg-white active:border-white active:text-grey-400': version === 'neutral-border',
+      } : {
+        'bg-primary': version === 'primary',
+        'border-primary bg-primary': version === 'secondary',
+        'before:bg-primary before:scale-112.5 before:ease-reveal-xxl': version === 'tertiary',
+
+        'border-opacity-100 bg-opacity-50': version === 'success-bg',
+        'border-opacity-100 bg-opacity-50': version === 'warning-bg',
+        'border-opacity-100 bg-opacity-50': version === 'error-bg',
+        'border-opacity-100 bg-opacity-50': version === 'info-bg',
+        'border-opacity-100 bg-opacity-50': version === 'neutral-bg',
+
+        'bg-opacity-100 bg-success border-success text-white': version === 'success-border',
+        'bg-opacity-100 bg-warning border-warning text-white': version === 'warning-border',
+        'bg-opacity-100 bg-error border-error text-white': version === 'error-border',
+        'bg-opacity-100 bg-info border-info text-white': version === 'info-border',
+        'bg-opacity-100 bg-white border-white text-grey-400': version === 'neutral-border',
       }
     ]"
     v-bind="{
@@ -81,6 +97,7 @@ type Props = {
   to?: NuxtLinkProps
   target?: '_self' | '_blank' | '_parent' | '_top'
   type?: 'submit' | 'reset' | 'button'
+  isActive?: boolean
   isImportant?: boolean
   copiedText?: string
 }
@@ -90,6 +107,7 @@ const props = withDefaults(defineProps<Props>(), {
   to: null,
   target: null,
   type: null,
+  isActive: false,
   isImportant: false,
   copiedText: '',
 })

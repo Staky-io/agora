@@ -24,5 +24,12 @@
 import { storeToRefs } from 'pinia'
 import { useProposalsStore } from '@/stores/proposals'
 
-const { proposals } = storeToRefs(useProposalsStore())
+const proposalsStore = useProposalsStore()
+
+const { fetchProposals } = proposalsStore
+const { proposals } = storeToRefs(proposalsStore)
+
+onBeforeMount(async () => {
+  await fetchProposals()
+})
 </script>
