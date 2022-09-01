@@ -37,7 +37,7 @@
           class="grid gap-20"
         >
           <span>
-            Your proposal is being submitted. Please wait for few minutes.
+            Your proposal is being submitted. Please wait for few seconds.
           </span>
         </div>
       </transition>
