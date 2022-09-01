@@ -82,14 +82,14 @@ const props = defineProps<Props>()
 const { iconNetwork, scoreAddress } = useRuntimeConfig()
 
 const { emit, bus, events } = useEventsBus()
-const { getBlockData, getTxResult } = useScoreService()
+const { getBlockData, getTxResult, getStepLimit } = useScoreService()
 const { notify } = useNotificationToast()
 const { ICONEX_HANDLE_CANCEL } = useIconexListener()
 
 const { dipsatchLedger } = useLedgerStore()
 const { address, wallet } = storeToRefs(useUserStore())
 
-const nid = iconNetwork === 'testnet' ? '83' : '1'
+const nid = iconNetwork === 'testnet' ? '2' : '1'
 
 const isGlobalListening = ref<boolean>(false)
 const ACTION_SUBMITVOTE = reactive<ActionData>({
@@ -107,12 +107,19 @@ const paramsState = {
   _vote: props.vote,
 }
 
+const stepLimit = await getStepLimit(
+  address.value,
+  'vote',
+  scoreAddress,
+  paramsState,
+)
+
 const getSubmitVoteQuery = async (): Promise<Query> => {
   try {
     const tx = new CallTransactionBuilder()
       .from(address.value)
       .to(scoreAddress)
-      .stepLimit('0x1')
+      .stepLimit(stepLimit)
       .nid(IconConverter.toBigNumber(nid))
       .nonce(IconConverter.toBigNumber('1'))
       .version(IconConverter.toBigNumber('3'))

@@ -84,7 +84,7 @@ const props = defineProps<Props>()
 const { iconNetwork, scoreAddress } = useRuntimeConfig()
 
 const { emit, bus, events } = useEventsBus()
-const { getBlockData, getTxResult } = useScoreService()
+const { getBlockData, getTxResult, getStepLimit } = useScoreService()
 const { notify } = useNotificationToast()
 const { ICONEX_HANDLE_CANCEL } = useIconexListener()
 
@@ -138,18 +138,26 @@ try {
 } catch (error) {
   console.error(error)
 }
+const stepLimit = await getStepLimit(
+  address.value,
+  'submitProposal',
+  scoreAddress,
+  {
+    _ipfsHash: ipfsHash,
+    _endTime: expirationState.toString(),
+  },
+)
 
 const getSubmitProposalQuery = async (): Promise<Query> => {
   try {
     const tx = new CallTransactionBuilder()
       .from(address.value)
       .to(scoreAddress)
-      .stepLimit('0x1')
+      .stepLimit(stepLimit)
       .nid(IconConverter.toBigNumber(nid))
       .nonce(IconConverter.toBigNumber('1'))
       .version(IconConverter.toBigNumber('3'))
       .timestamp((new Date()).getTime() * 1000)
-      // .value((IconAmount.of(price * amount, IconAmount.Unit.ICX).toLoop()))
       .method('submitProposal')
       .params({
         _ipfsHash: ipfsHash,
