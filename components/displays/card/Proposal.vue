@@ -3,20 +3,35 @@
     <div class="grid gap-10 max-w-640">
       <div class="grid gap-10 grid-flow-col items-center justify-start">
         <div class="w-24 h-24 bg-grey-200 rounded-full" />
-        <div class="text-grey-100">
-          <span class="typo-text-semibold">{{ name }} by</span>
+        <div class="text-white">
+          <component
+            :is="isFull ? 'h1' : 'h2'"
+            class="inline typo-title-l"
+          >
+            {{ title }}
+          </component>
           {{ ' ' }}
-          <span class="text-white typo-text-medium">{{ /hx[a-f0-9]{40,40}/.test(creator) ? truncate(creator) : creator }}</span>
+          <span class="text-grey-100 typo-text-semibold">by</span>
           {{ ' ' }}
-          <span class="typo-text-regular">Core</span>
+          <span class="text-primary typo-text-medium">{{ /hx[a-f0-9]{40,40}/.test(creator) ? truncate(creator) : creator }}</span>
         </div>
       </div>
-      <h2 class="text-white typo-title-s">
-        {{ title }}
-      </h2>
+      <p
+        v-if="discussion"
+        class="text-grey-100 typo-text-semibold"
+      >
+        Discussion: <NuxtLink
+          class="text-primary"
+          :to="discussion"
+          target="_blank"
+        >
+          {{ discussion }}
+        </NuxtLink>
+      </p>
       <VMdPreview
         v-if="isFull"
         :text="truncatedDescription"
+        class="mt-10"
       />
       <p
         v-else
@@ -25,7 +40,7 @@
         {{ truncatedDescription }}
       </p>
       <div
-        v-if="totalCounts"
+        v-if="totalCounts && !isFull"
         class="grid grid-cols-auto-1fr items-center gap-24"
       >
         <span
@@ -40,6 +55,7 @@
         </span>
         <DisplaysStatProgress
           is-minified
+          is-rounded
           :version="progressVersion"
           :choice="votesStatus.choice"
           :count="votesStatus.count"
@@ -63,7 +79,7 @@ import { capitalize, truncate } from '@/assets/scripts/helpers'
 type Props = {
   isFull?: boolean
   uid: string
-  name: string
+  discussion: string
   title: string
   creator: string
   status: 'Active' | 'Closed'

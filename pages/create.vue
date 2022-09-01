@@ -64,7 +64,7 @@
       v-else
       is-full
       :uid="uid"
-      name="???"
+      :discussion="formStates.discussion"
       :title="formStates.title || '[Empty title]'"
       :creator="truncatedAddress || '[Unregistered creator]'"
       status="Active"

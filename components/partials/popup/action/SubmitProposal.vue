@@ -1,5 +1,5 @@
 <template>
-  <PartialsPopup>
+  <PartialsPopup require-button>
     <template #header>
       <h2>
         <client-only>

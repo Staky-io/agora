@@ -16,6 +16,12 @@
           <DisplaysCardProposal v-bind="proposal" />
         </nuxt-link>
       </div>
+      <div
+        v-else
+        class="px-12 py-8 rounded-5 bg-info bg-opacity-10 text-info typo-paragraph"
+      >
+        No proposal has been found.
+      </div>
     </client-only>
   </Container>
 </template>

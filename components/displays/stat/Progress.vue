@@ -28,7 +28,7 @@
             'text-white': version === 'neutral',
           }"
         >
-          {{ percent.toFixed(2) }}%
+          {{ percent.toFixed(isRounded ? 0 : 2) }}%
         </span>
       </div>
     </div>
@@ -58,6 +58,7 @@ type Version =
 
 type Props = {
   isMinified?: boolean
+  isRounded?: boolean
   version: Version
   choice: string
   count: number
@@ -66,6 +67,7 @@ type Props = {
 
 const props = withDefaults(defineProps<Props>(), {
   isMinified: false,
+  isRounded: false,
 })
 
 const percent = computed<number>(() => props.ratio * 100)

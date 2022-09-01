@@ -54,10 +54,7 @@
               </ControlsButtonAction>
             </div>
           </DisplaysCardVote>
-          <DisplaysCardVote
-            title="Current result"
-            :subtitle="currentProposal.name"
-          >
+          <DisplaysCardVote title="Current results">
             <div class="grid gap-20">
               <DisplaysStatProgress
                 version="success"

@@ -9,7 +9,7 @@ const { CallTransactionBuilder } = IconBuilder
 
 export type Proposal = {
   uid: string
-  name: string
+  discussion: string
   title: string
   description: string
   creator: string
@@ -62,15 +62,15 @@ export const useProposalsStore = defineStore('proposals-store', () => {
 
         proposals.value.push({
           uid: proposalDataFromScore._proposalId,
-          name: proposalDataFromIpfs.discussion || '',
+          discussion: proposalDataFromIpfs.discussion || '',
           title: proposalDataFromIpfs.title || '',
           description: proposalDataFromIpfs.description || '',
           creator: proposalDataFromScore._creator,
           status: proposalDataFromScore._status,
           votes: {
-            for: parseInt(proposalDataFromScore._forVoices, 16),
-            against: parseInt(proposalDataFromScore._againstVoices, 16),
-            abstain: parseInt(proposalDataFromScore._abstainVoices, 16),
+            for: parseInt(proposalDataFromScore._forVoices, 16) / 10e18,
+            against: parseInt(proposalDataFromScore._againstVoices, 16) / 10e18,
+            abstain: parseInt(proposalDataFromScore._abstainVoices, 16) / 10e18,
           },
         })
       }
@@ -87,15 +87,15 @@ export const useProposalsStore = defineStore('proposals-store', () => {
       proposals.value = [...new Array(proposalsDataFromScore.length)]
         .map((_, index): Proposal => ({
           uid: proposalsDataFromScore[index]._proposalId,
-          name: proposalsDataFromIpfs[index].discussion || '',
+          discussion: proposalsDataFromIpfs[index].discussion || '',
           title: proposalsDataFromIpfs[index].title || '',
           description: proposalsDataFromIpfs[index].description || '',
           creator: proposalsDataFromScore[index]._creator,
           status: proposalsDataFromScore[index]._status,
           votes: {
-            for: parseInt(proposalsDataFromScore[index]._forVoices, 16),
-            against: parseInt(proposalsDataFromScore[index]._againstVoices, 16),
-            abstain: parseInt(proposalsDataFromScore[index]._abstainVoices, 16),
+            for: parseInt(proposalsDataFromScore[index]._forVoices, 16) / 10e18,
+            against: parseInt(proposalsDataFromScore[index]._againstVoices, 16) / 10e18,
+            abstain: parseInt(proposalsDataFromScore[index]._abstainVoices, 16) / 10e18,
           },
         }))
     } catch (error) {
