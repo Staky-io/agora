@@ -2,7 +2,11 @@
   <article class="grid gap-32 grid-cols-1fr-auto justify-between items-start p-32 text-left rounded-30 border-1 border-grey-200 border-opacity-0 hover:border-opacity-100 transition-border duration-200">
     <div class="grid gap-10 max-w-640">
       <div class="grid gap-10 grid-flow-col items-center justify-start">
-        <div class="w-24 h-24 bg-grey-200 rounded-full" />
+        <UtilsJazzicon
+          class="flex justify-center items-center"
+          :address="creator"
+          :diameter="24"
+        />
         <div class="text-white">
           <component
             :is="isFull ? 'h1' : 'h2'"
