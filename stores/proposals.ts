@@ -1,11 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import axios from 'axios'
-import IconService from 'icon-sdk-js'
 import { defineStore, storeToRefs } from 'pinia'
 import { useUserStore } from './user'
-
-const { IconConverter, IconBuilder } = IconService
-const { CallTransactionBuilder } = IconBuilder
 
 export type Proposal = {
   uid: string
@@ -20,6 +16,8 @@ export type Proposal = {
     abstain: number
   }
 }
+
+type VoteValue = keyof Proposal['votes']
 
 type ProposalScore = {
   _proposalId: string
@@ -38,15 +36,21 @@ type ProposalIpfs = {
   discussion: string
 }
 
+type UserVotes = {
+  [id in string]: VoteValue
+}
+
 const getIpfs = (hash: string): string => `https://craft-network.mypinata.cloud/ipfs/${hash}`
 
 export const useProposalsStore = defineStore('proposals-store', () => {
+  const { address } = storeToRefs(useUserStore())
   const { SCORECallReadOnly } = useScoreService()
   const route = useRoute()
 
   // States
   const isAllFetched = ref<boolean>(false)
   const proposals = ref<Proposal[]>([])
+  const userVotes = ref<UserVotes>({})
 
   // Getters
   const currentProposal = computed<Proposal>(() => {
@@ -75,13 +79,21 @@ export const useProposalsStore = defineStore('proposals-store', () => {
           },
         })
       }
+
+      if (address.value && !userVotes.value[currentProposal.value.uid]) {
+        const currentUserVote = await SCORECallReadOnly<{ _power: string, _vote: VoteValue }>('getVote', { _voter: address.value, _proposalId: currentProposal.value.uid })
+
+        if (currentUserVote) {
+          userVotes.value[currentProposal.value.uid] = currentUserVote._vote
+        }
+      }
     } catch (error) {
       throw new Error(error)
     }
   }
   const fetchProposals = async (): Promise<void> => {
     try {
-      const lastId = parseInt(await SCORECallReadOnly('lastProposalId'), 16)
+      const lastId = parseInt(await SCORECallReadOnly<string>('lastProposalId'), 16)
       const proposalsDataFromScore = await Promise.all([...new Array(lastId)].map(() => SCORECallReadOnly<ProposalScore>('getProposal', { _proposalId: `0x${parseFloat(`${lastId}`).toString(16)}` })))
       const proposalsDataFromIpfs = await Promise.all(proposalsDataFromScore.map(({ _ipfsHash }) => axios.get<ProposalIpfs>(getIpfs(_ipfsHash)).then(({ data }) => data)))
 
@@ -110,6 +122,7 @@ export const useProposalsStore = defineStore('proposals-store', () => {
     // States
     isAllFetched,
     proposals,
+    userVotes,
 
     // Getters
     currentProposal,

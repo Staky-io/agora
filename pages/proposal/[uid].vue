@@ -28,30 +28,46 @@
               <div class="grid gap-12 grid-cols-2">
                 <ControlsButtonAction
                   version="success-border"
-                  :is-active="currentVote === 'for'"
-                  @click="currentVote = 'for'"
+                  :is-active="[currentVote, userVote].includes('for')"
+                  :is-locked="!!userVote && userVote !== 'for'"
+                  @click="currentVote = userVote ? null : 'for'"
                 >
                   FOR
                 </ControlsButtonAction>
                 <ControlsButtonAction
                   version="error-border"
-                  :is-active="currentVote === 'against'"
-                  @click="currentVote = 'against'"
+                  :is-active="[currentVote, userVote].includes('against')"
+                  :is-locked="!!userVote && userVote !== 'against'"
+                  @click="currentVote = userVote ? null : 'against'"
                 >
                   AGAINST
                 </ControlsButtonAction>
                 <ControlsButtonAction
                   version="neutral-border"
                   class="col-span-2"
-                  :is-active="currentVote === 'abstain'"
-                  @click="currentVote = 'abstain'"
+                  :is-active="[currentVote, userVote].includes('abstain')"
+                  :is-locked="!!userVote && userVote !== 'abstain'"
+                  @click="currentVote = userVote ? null : 'abstain'"
                 >
                   ABSTAIN
                 </ControlsButtonAction>
               </div>
-              <ControlsButtonAction @click="onVote">
+              <ControlsButtonAction
+                v-if="!userVote"
+                @click="onVote"
+              >
                 Vote
               </ControlsButtonAction>
+              <div
+                v-else
+                class="typo-button-s text-center"
+              >
+                Thanks for your vote!
+                <UtilsIcon
+                  name="State/Success"
+                  class="w-20 h-20"
+                />
+              </div>
             </div>
           </DisplaysCardVote>
           <DisplaysCardVote title="Current results">
@@ -92,7 +108,7 @@ const uid = route?.params?.uid
 
 const proposalsStore = useProposalsStore()
 const { fetchProposal } = proposalsStore
-const { currentProposal } = storeToRefs(proposalsStore)
+const { currentProposal, userVotes } = storeToRefs(proposalsStore)
 const { isLoggedIn } = useUserStore()
 const { emit, events } = useEventsBus()
 
@@ -107,6 +123,8 @@ type Results = {
 }
 
 const currentVote = ref<VoteChoice>(null)
+
+const userVote = computed<VoteChoice>(() => (typeof uid === 'string' ? userVotes.value[uid] : null))
 
 const resultsVotes = computed<Results>(() => {
   const totalCounts = Object.values(currentProposal.value.votes).reduce((accu, curr) => accu + curr, 0)
