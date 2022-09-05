@@ -56,7 +56,7 @@
         :errors="v$.expiration.$errors"
         class="w-256"
         is-required
-        label="Expiration duration"
+        label="Proposal length"
         :options="Object.values(EXPIRATION)"
       />
     </form>
