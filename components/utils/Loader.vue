@@ -10,7 +10,7 @@
         'border-4': thickness === 4,
       }
     ]"
-    class="inline-block text-current rounded-full border-solid border-transparent border-t-current animate-spin will-change-transform"
+    class="inline-block text-primary rounded-full border-solid border-transparent border-t-current animate-spin will-change-transform"
   />
 </template>
 

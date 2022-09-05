@@ -45,6 +45,7 @@ export const useProposalsStore = defineStore('proposals-store', () => {
   const route = useRoute()
 
   // States
+  const isAllFetched = ref<boolean>(false)
   const proposals = ref<Proposal[]>([])
 
   // Getters
@@ -100,15 +101,18 @@ export const useProposalsStore = defineStore('proposals-store', () => {
         }))
     } catch (error) {
       throw new Error(error)
+    } finally {
+      isAllFetched.value = true
     }
   }
 
   return {
     // States
-    currentProposal,
+    isAllFetched,
     proposals,
 
     // Getters
+    currentProposal,
 
     // Actions
     fetchProposal,

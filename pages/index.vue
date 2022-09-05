@@ -4,8 +4,12 @@
       Proposals
     </h1>
     <client-only>
+      <UtilsLoader
+        v-if="!isAllFetched"
+        class="mx-auto my-40"
+      />
       <div
-        v-if="proposals.length"
+        v-else-if="proposals.length"
         class="grid gap-16"
       >
         <nuxt-link
@@ -33,7 +37,7 @@ import { useProposalsStore } from '@/stores/proposals'
 const proposalsStore = useProposalsStore()
 
 const { fetchProposals } = proposalsStore
-const { proposals } = storeToRefs(proposalsStore)
+const { isAllFetched, proposals } = storeToRefs(proposalsStore)
 
 onBeforeMount(async () => {
   await fetchProposals()
