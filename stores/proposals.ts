@@ -73,9 +73,9 @@ export const useProposalsStore = defineStore('proposals-store', () => {
           creator: proposalDataFromScore._creator,
           status: proposalDataFromScore._status,
           votes: {
-            for: parseInt(proposalDataFromScore._forVoices, 16) / 10e18,
-            against: parseInt(proposalDataFromScore._againstVoices, 16) / 10e18,
-            abstain: parseInt(proposalDataFromScore._abstainVoices, 16) / 10e18,
+            for: parseInt(proposalDataFromScore._forVoices, 16) / (10 ** 18),
+            against: parseInt(proposalDataFromScore._againstVoices, 16) / (10 ** 18),
+            abstain: parseInt(proposalDataFromScore._abstainVoices, 16) / (10 ** 18),
           },
         })
       }
