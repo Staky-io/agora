@@ -89,7 +89,7 @@ const { ICONEX_HANDLE_CANCEL } = useIconexListener()
 const { dipsatchLedger } = useLedgerStore()
 const { address, wallet } = storeToRefs(useUserStore())
 
-const nid = iconNetwork === 'testnet' ? '2' : '1'
+const nid = iconNetwork === 'testnet' ? '83' : '1'
 
 const isGlobalListening = ref<boolean>(false)
 const ACTION_SUBMITVOTE = reactive<ActionData>({
