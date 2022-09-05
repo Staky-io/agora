@@ -31,7 +31,7 @@
             is-wysiwyg
             type="textarea"
             label="Description (optional)"
-            tag="0/14,000"
+            :tag="`${v$.description.$model.length}/${maxDiscussionLength}`"
             placeholder="The description of your proposal"
             :rows="12"
           />
@@ -79,11 +79,9 @@
 </template>
 
 <script setup lang="ts">
-// eslint-disable-next-line import/no-unresolved
-import { create } from 'ipfs-http-client'
 import { storeToRefs } from 'pinia'
 import useVuelidate from '@vuelidate/core'
-import { required, url } from '@vuelidate/validators'
+import { maxLength, required, url } from '@vuelidate/validators'
 import { useUserStore } from '@/stores/user'
 
 enum EXPIRATION {
@@ -100,6 +98,7 @@ type FormStates = {
 }
 
 type FormValidators =
+  | ReturnType<typeof maxLength>
   | typeof required
   | typeof url
 
@@ -112,6 +111,7 @@ const createIsPreviewing = useState<boolean>('create-is-previewing', () => false
 const { truncatedAddress } = storeToRefs(useUserStore())
 
 const uid = ref<string>(Date.now().toString(36) + Math.random().toString(36).split('.')[1])
+const maxDiscussionLength = ref<number>(14000)
 
 const formStates = reactive<FormStates>({
   title: '',
@@ -122,7 +122,7 @@ const formStates = reactive<FormStates>({
 
 const v$ = useVuelidate<FormStates, FormRules>({
   title: { required },
-  description: {},
+  description: { maxLength: maxLength(maxDiscussionLength) },
   discussion: { url },
   expiration: { required },
 }, formStates)

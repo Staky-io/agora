@@ -188,6 +188,7 @@ const model = computed<ModelValue>({
 
 const errorMessage = computed<string>(() => {
   if (props.errors && props.errors.length) {
+    if (props.errors[0].$validator === 'maxLength') return 'This field is too long.'
     if (props.errors[0].$validator === 'required') return 'This field is required.'
     if (props.errors[0].$validator === 'url') return 'This field must be a valid URL.'
   }
