@@ -67,7 +67,7 @@ export const useProposalsStore = defineStore('proposals-store', () => {
 
         proposals.value.push({
           uid: proposalDataFromScore._proposalId,
-          discussion: proposalDataFromIpfs.discussion || '',
+          discussion: (proposalDataFromIpfs.discussion !== 'undefined' && proposalDataFromIpfs.discussion) || '',
           title: proposalDataFromIpfs.title || '',
           description: proposalDataFromIpfs.description || '',
           creator: proposalDataFromScore._creator,
@@ -94,13 +94,13 @@ export const useProposalsStore = defineStore('proposals-store', () => {
   const fetchProposals = async (): Promise<void> => {
     try {
       const lastId = parseInt(await SCORECallReadOnly<string>('lastProposalId'), 16)
-      const proposalsDataFromScore = await Promise.all([...new Array(lastId)].map(() => SCORECallReadOnly<ProposalScore>('getProposal', { _proposalId: `0x${parseFloat(`${lastId}`).toString(16)}` })))
+      const proposalsDataFromScore = await Promise.all([...new Array(lastId)].map((_, index) => SCORECallReadOnly<ProposalScore>('getProposal', { _proposalId: `0x${parseFloat(`${index + 1}`).toString(16)}` })))
       const proposalsDataFromIpfs = await Promise.all(proposalsDataFromScore.map(({ _ipfsHash }) => axios.get<ProposalIpfs>(getIpfs(_ipfsHash)).then(({ data }) => data)))
 
       proposals.value = [...new Array(proposalsDataFromScore.length)]
         .map((_, index): Proposal => ({
           uid: proposalsDataFromScore[index]._proposalId,
-          discussion: proposalsDataFromIpfs[index].discussion || '',
+          discussion: (proposalsDataFromIpfs[index].discussion !== 'undefined' && proposalsDataFromIpfs[index].discussion) || '',
           title: proposalsDataFromIpfs[index].title || '',
           description: proposalsDataFromIpfs[index].description || '',
           creator: proposalsDataFromScore[index]._creator,
