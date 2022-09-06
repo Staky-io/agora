@@ -21,7 +21,7 @@
         />
         <div class="grid gap-20 grid-flow-col auto-cols-fr">
           <DisplaysCardVote
-            v-if="isLoggedIn && currentProposal.status === 'Active'"
+            v-if="isLoggedIn && address !== currentProposal.creator && currentProposal.status === 'Active'"
             title="Cast your vote"
           >
             <div class="grid gap-24">
@@ -107,9 +107,10 @@ const route = useRoute()
 const uid = route?.params?.uid
 
 const proposalsStore = useProposalsStore()
+const usersStore = useUserStore()
 const { fetchProposal } = proposalsStore
 const { currentProposal, userVotes } = storeToRefs(proposalsStore)
-const { isLoggedIn } = useUserStore()
+const { address, isLoggedIn } = storeToRefs(usersStore)
 const { emit, events } = useEventsBus()
 
 type VoteChoice = keyof typeof currentProposal.value.votes
