@@ -68,6 +68,29 @@
   >
     <div class="relative grid gap-10 grid-flow-col place-content-center place-items-center">
       <slot />
+      <template v-if="copiedText">
+        <transition
+          name="fade-quick"
+          mode="out-in"
+        >
+          <UtilsIcon
+            v-if="!isCopying"
+            class="w-20 h-20"
+            :class="{
+              'text-grey-100': version === 'primary'
+            }"
+            name="Copy"
+          />
+          <UtilsIcon
+            v-else
+            class="w-20 h-20"
+            :class="{
+              'text-grey-100': version === 'primary'
+            }"
+            name="State/Success"
+          />
+        </transition>
+      </template>
     </div>
   </component>
 </template>
@@ -115,9 +138,17 @@ const props = withDefaults(defineProps<Props>(), {
 const { copyText } = useCopyText()
 const { NuxtLink } = useNuxtLink()
 
-const onClick = (event: Event): void => {
+const isCopying = ref<boolean>(false)
+const copyTimeout = ref<NodeJS.Timeout>(null)
+
+const onClick = (): void => {
   if (props.copiedText) {
+    clearTimeout(copyTimeout.value)
     copyText(props.copiedText)
+    isCopying.value = true
+    copyTimeout.value = setTimeout(() => {
+      isCopying.value = false
+    }, 1000)
   }
 }
 </script>

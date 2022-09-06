@@ -25,10 +25,6 @@
           <template v-else-if="truncatedAddress">
             <ControlsButtonAction :copied-text="address">
               {{ truncatedAddress }}
-              <UtilsIcon
-                class="w-20 h-20 text-grey-100"
-                name="Copy"
-              />
             </ControlsButtonAction>
             <ControlsButtonIcon
               version="error"
