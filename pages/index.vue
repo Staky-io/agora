@@ -13,7 +13,7 @@
         class="grid gap-16"
       >
         <nuxt-link
-          v-for="(proposal, i) in proposals"
+          v-for="(proposal, i) in proposals.sort((a,b) => b.uid-a.uid)"
           :key="`proposal-${i}`"
           :to="{ name: 'proposal-uid', params: { uid: proposal.uid } }"
         >
