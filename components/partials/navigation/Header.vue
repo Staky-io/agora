@@ -77,16 +77,20 @@
               @update="updateTab"
             />
             <div class="grid gap-4 grid-flow-col items-center justify-end">
-              <button
-                v-for="(socialData, i) in socialsData.filter(({ url }) => url)"
+              <a
+                v-for="(socialData, i) in socialsData.filter(({ url }) => url.includes('https'))"
                 :key="`socialData-${i}`"
                 class="grid place-items-center w-20 h-20 text-primary"
+                :href="socialData.url"
+                :title="socialData.name"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <UtilsIcon
                   class="w-full h-full"
                   :name="socialData.icon"
                 />
-              </button>
+              </a>
             </div>
           </template>
           <template v-else-if="headingType === 'vote-information'">
@@ -142,9 +146,9 @@ type SocialData = {
 
 const {
   name: appName,
-  discord: discordUrl,
-  github: githubUrl,
-  twitter: twitterUrl,
+  discord,
+  github,
+  twitter,
 } = useRuntimeConfig()
 const route = useRoute()
 const createIsPreviewing = useState<boolean>('create-is-previewing', () => false)
@@ -160,9 +164,9 @@ const activeTabIndex = ref<number>(0)
 const tabsNames = ref<string[]>(['Proposals', 'New proposals'])
 
 const socialsData = ref<SocialData[]>([
-  { name: 'Discord', url: discordUrl, icon: 'Logo/Discord' },
-  { name: 'Github', url: githubUrl, icon: 'Logo/Github' },
-  { name: 'Twitter', url: twitterUrl, icon: 'Logo/Twitter' },
+  { name: 'Discord', url: discord.includes('https') || !discord ? discord : `https://discord.gg/${discord}`, icon: 'Logo/Discord' },
+  { name: 'Github', url: github.includes('https') || !github ? github : `https://github.com/${github}`, icon: 'Logo/Github' },
+  { name: 'Twitter', url: twitter.includes('https') || !twitter ? twitter : `https://twitter.com/${twitter}`, icon: 'Logo/Twitter' },
 ])
 
 const protocolLogo = computed<string>(() => images.value.logo)
