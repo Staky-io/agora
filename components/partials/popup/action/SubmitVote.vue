@@ -50,6 +50,7 @@ import IconService from 'icon-sdk-js'
 import { storeToRefs } from 'pinia'
 import type { BlockData } from '@/composables/useScoreService'
 import { useLedgerStore } from '@/stores/ledger'
+import { useProposalsStore } from '@/stores/proposals'
 import { useUserStore } from '@/stores/user'
 
 const { IconConverter, IconBuilder } = IconService
@@ -80,6 +81,8 @@ type Query = {
 const props = defineProps<Props>()
 
 const { iconNetwork, scoreAddress } = useRuntimeConfig()
+const route = useRoute()
+const uid = route?.params?.uid
 
 const { emit, bus, events } = useEventsBus()
 const { getBlockData, getTxResult, getStepLimit } = useScoreService()
@@ -87,6 +90,7 @@ const { notify } = useNotificationToast()
 const { ICONEX_HANDLE_CANCEL } = useIconexListener()
 
 const { dipsatchLedger } = useLedgerStore()
+const { fetchProposal } = useProposalsStore()
 const { address, wallet } = storeToRefs(useUserStore())
 
 const nid = iconNetwork === 'testnet' ? '83' : '1'
@@ -177,11 +181,15 @@ const RESET_LISTENER = (): void => {
   RESET_SUBMITVOTE()
 }
 
-const CALLBACK_SUBMITVOTE = (hash: string): void => {
+const CALLBACK_SUBMITVOTE = async (hash: string): void => {
   try {
     RESET_SUBMITVOTE()
     ACTION_SUBMITVOTE.tx = { hash }
     ACTION_SUBMITVOTE.isSuccess = true
+
+    if (typeof uid === 'string') {
+      await fetchProposal(uid)
+    }
   } catch (error) {
     notify.error({
       title: 'Error',
