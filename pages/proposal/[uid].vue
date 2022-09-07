@@ -21,7 +21,7 @@
         />
         <div class="grid gap-20 grid-flow-col auto-cols-fr">
           <DisplaysCardVote
-            v-if="isLoggedIn && address !== currentProposal.creator && currentProposal.status === 'Active'"
+            v-if="isLoggedIn && currentProposal.status === 'Active'"
             title="Cast your vote"
           >
             <div class="grid gap-24">
