@@ -102,10 +102,7 @@
                 New proposal
               </h2>
               <p class="text-grey-100 typo-text-medium">
-                You need to have a minimum of 100 “Staked CFT” in order to submit a proposal.
-                <button class="text-white typo-text-semibold transition-color duration-100 hover:text-primary">
-                  Learn more
-                </button>
+                You need to have a minimum of {{ minTokens }} tokens ({{ scoreAddress }}) in order to submit a proposal.
               </p>
             </div>
             <ControlsButtonAction
@@ -123,10 +120,13 @@
 </template>
 
 <script setup lang="ts">
+
 import { storeToRefs } from 'pinia'
 import { useImagesStore } from '@/stores/images'
 import { useUserStore } from '@/stores/user'
 import type { IconsNames } from '@/composables/useIconsComponents'
+
+const { scoreAddress } = useRuntimeConfig()
 
 enum HEADING {
   PROTOCOL_PROPOSALS = 'protocol-proposals',
@@ -155,6 +155,7 @@ const { emit, events } = useEventsBus()
 
 const headingType = ref<HEADING>(null)
 const scrollRatio = ref<number>(0)
+const minTokens = ref<number>(0)
 const hasNavigationTab = ref<boolean>(false)
 const activeTabIndex = ref<number>(0)
 const tabsNames = ref<string[]>(['Proposals', 'New proposals'])
@@ -166,6 +167,7 @@ const socialsData = ref<SocialData[]>([
 ])
 
 const protocolLogo = computed<string>(() => images.value.logo)
+const { SCORECallReadOnly } = useScoreService()
 
 const updateTab = (index: number): void => {
   activeTabIndex.value = index
@@ -189,7 +191,8 @@ watch(route, ({ name }) => {
   }
 }, { immediate: true })
 
-onMounted(() => {
+onMounted(async () => {
+  minTokens.value = parseInt(await SCORECallReadOnly<string>('minimumThreshold'), 16) / (10 ** 18)
   window.addEventListener('scroll', onPageScroll)
   onPageScroll()
 })
