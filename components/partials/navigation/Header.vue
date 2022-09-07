@@ -74,7 +74,7 @@
             />
             <div class="grid gap-4 grid-flow-col items-center justify-end">
               <a
-                v-for="(socialData, i) in socialsData.filter(({ url }) => url.includes('https'))"
+                v-for="(socialData, i) in socialsData.filter(({ url }) => url && url.includes('https'))"
                 :key="`socialData-${i}`"
                 class="grid place-items-center w-20 h-20 text-primary"
                 :href="socialData.url"
@@ -160,9 +160,9 @@ const activeTabIndex = ref<number>(0)
 const tabsNames = ref<string[]>(['Proposals', 'New proposals'])
 
 const socialsData = ref<SocialData[]>([
-  { name: 'Discord', url: discord.includes('https') || !discord ? discord : `https://discord.gg/${discord}`, icon: 'Logo/Discord' },
-  { name: 'Github', url: github.includes('https') || !github ? github : `https://github.com/${github}`, icon: 'Logo/Github' },
-  { name: 'Twitter', url: twitter.includes('https') || !twitter ? twitter : `https://twitter.com/${twitter}`, icon: 'Logo/Twitter' },
+  { name: 'Discord', url: !discord || discord.includes('https') ? discord : `https://discord.gg/${discord}`, icon: 'Logo/Discord' },
+  { name: 'Github', url: !github || github.includes('https') ? github : `https://github.com/${github}`, icon: 'Logo/Github' },
+  { name: 'Twitter', url: !twitter || twitter.includes('https') ? twitter : `https://twitter.com/${twitter}`, icon: 'Logo/Twitter' },
 ])
 
 const protocolLogo = computed<string>(() => images.value.logo)
