@@ -48,11 +48,11 @@
 <script setup lang="ts">
 import IconService from 'icon-sdk-js'
 import { storeToRefs } from 'pinia'
+import type { BlockData } from '@/composables/useScoreService'
 import { useLedgerStore } from '@/stores/ledger'
 import { useUserStore } from '@/stores/user'
-import axios from 'axios'
 
-const { IconConverter, IconBuilder, IconAmount } = IconService
+const { IconConverter, IconBuilder } = IconService
 const { CallTransactionBuilder } = IconBuilder
 
 type Props = {
@@ -107,15 +107,15 @@ const paramsState = {
   _vote: props.vote,
 }
 
-const stepLimit = await getStepLimit(
-  address.value,
-  'vote',
-  scoreAddress,
-  paramsState,
-)
-
 const getSubmitVoteQuery = async (): Promise<Query> => {
   try {
+    const stepLimit = await getStepLimit(
+      address.value,
+      'vote',
+      scoreAddress,
+      paramsState,
+    )
+
     const tx = new CallTransactionBuilder()
       .from(address.value)
       .to(scoreAddress)
@@ -124,7 +124,6 @@ const getSubmitVoteQuery = async (): Promise<Query> => {
       .nonce(IconConverter.toBigNumber('1'))
       .version(IconConverter.toBigNumber('3'))
       .timestamp((new Date()).getTime() * 1000)
-      // .value((IconAmount.of(price * amount, IconAmount.Unit.ICX).toLoop()))
       .method('vote')
       .params(paramsState)
       .build()
@@ -145,24 +144,23 @@ const getSubmitVoteQuery = async (): Promise<Query> => {
   }
 }
 
-const makeSubmitVoteQuery = async (hash: string): Promise<{ block: unknown, tx: { txHash: string } }> => new Promise((resolve, reject) => {
-  try {
-    const interval = setInterval(async () => {
-      const tx = await getTxResult(hash)
+const makeSubmitVoteQuery = async (hash: string): Promise<{ block: BlockData, tx: { txHash: string } }> => new Promise((resolve, reject) => {
+  getTxResult(hash)
+    .then((tx) => {
       if (tx.status === 1) {
-        clearInterval(interval)
-
-        const block = await getBlockData(tx.blockHash)
-
-        resolve({ block, tx })
+        getBlockData(tx.blockHash)
+          .then((block) => {
+            resolve({ block, tx })
+          })
       } else {
         reject(tx.failure)
-        clearInterval(interval)
       }
-    }, 2000)
-  } catch (error) {
-    reject(error)
-  }
+    })
+    .catch(() => {
+      setTimeout(() => {
+        resolve(makeSubmitVoteQuery(hash))
+      }, 2000)
+    })
 })
 
 const RESET_SUBMITVOTE = (): void => {

@@ -48,18 +48,19 @@
 <script setup lang="ts">
 import IconService from 'icon-sdk-js'
 import { storeToRefs } from 'pinia'
+import type { BlockData } from '@/composables/useScoreService'
 import { useLedgerStore } from '@/stores/ledger'
 import { useUserStore } from '@/stores/user'
 import axios from 'axios'
 
-const { IconConverter, IconBuilder, IconAmount } = IconService
+const { IconConverter, IconBuilder } = IconService
 const { CallTransactionBuilder } = IconBuilder
 
 type Props = {
   title: string
-  description?: string
+  description: string
   discussion?: string
-  expiration: string | number
+  expiration: string
 }
 
 type ActionData = {
@@ -104,10 +105,6 @@ const ACTION_SUBMITPROPOSAL = reactive<ActionData>({
   isSuccess: false,
 })
 
-type ParamsState = {
-  [key in `_${keyof Props}`]: Props[keyof Props]
-}
-
 let expirationState = 0
 switch (props.expiration) {
   case '3 days':
@@ -123,33 +120,34 @@ switch (props.expiration) {
     expirationState = (new Date(Date.now()).getTime() + 1000 * 60 * 60 * 24 * 14) * 1000
     break
 }
-const paramsState: ParamsState = {
-  _title: props.title,
-  _expiration: expirationState,
-  ...props.description && { _description: props.description },
-  ...props.discussion && { _discussion: props.discussion },
-}
 
-let ipfsHash: string
-try {
-  // This endpoint is provided for free by Staky.io, this is compatible with Agora IPFS object only. Please use responsibly.
-  // eslint-disable-next-line no-underscore-dangle
-  ipfsHash = (await axios(`https://utils.craft.network/agoraPin?title=${paramsState._title}&description=${paramsState._description}&discussion=${paramsState._discussion}`)).data
-} catch (error) {
-  console.error(error)
+const paramsState = {
+  title: props.title,
+  description: props.description,
+  discussion: props.discussion || '',
 }
-const stepLimit = await getStepLimit(
-  address.value,
-  'submitProposal',
-  scoreAddress,
-  {
-    _ipfsHash: ipfsHash,
-    _endTime: expirationState.toString(),
-  },
-)
 
 const getSubmitProposalQuery = async (): Promise<Query> => {
   try {
+    const url = new URL('https://utils.craft.network/agoraPin')
+    url.searchParams.set('title', paramsState.title)
+    url.searchParams.set('description', paramsState.description)
+    if (paramsState.discussion) url.searchParams.set('discussion', paramsState.discussion)
+
+    const ipfsHash = await axios(url.href).then<string>((response) => response.data)
+
+    const methodParams = {
+      _ipfsHash: ipfsHash,
+      _endTime: expirationState.toString(),
+    }
+
+    const stepLimit = await getStepLimit(
+      address.value,
+      'submitProposal',
+      scoreAddress,
+      methodParams,
+    )
+
     const tx = new CallTransactionBuilder()
       .from(address.value)
       .to(scoreAddress)
@@ -159,10 +157,7 @@ const getSubmitProposalQuery = async (): Promise<Query> => {
       .version(IconConverter.toBigNumber('3'))
       .timestamp((new Date()).getTime() * 1000)
       .method('submitProposal')
-      .params({
-        _ipfsHash: ipfsHash,
-        _endTime: expirationState.toString(),
-      })
+      .params(methodParams)
       .build()
 
     return {
@@ -181,24 +176,23 @@ const getSubmitProposalQuery = async (): Promise<Query> => {
   }
 }
 
-const makeSubmitProposalQuery = async (hash: string): Promise<{ block: unknown, tx: { txHash: string } }> => new Promise((resolve, reject) => {
-  try {
-    const interval = setInterval(async () => {
-      const tx = await getTxResult(hash)
+const makeSubmitProposalQuery = async (hash: string): Promise<{ block: BlockData, tx: { txHash: string } }> => new Promise((resolve, reject) => {
+  getTxResult(hash)
+    .then((tx) => {
       if (tx.status === 1) {
-        clearInterval(interval)
-
-        const block = await getBlockData(tx.blockHash)
-
-        resolve({ block, tx })
+        getBlockData(tx.blockHash)
+          .then((block) => {
+            resolve({ block, tx })
+          })
       } else {
         reject(tx.failure)
-        clearInterval(interval)
       }
-    }, 2000)
-  } catch (error) {
-    reject(error)
-  }
+    })
+    .catch(() => {
+      setTimeout(() => {
+        resolve(makeSubmitProposalQuery(hash))
+      }, 2000)
+    })
 })
 
 const RESET_SUBMITPROPOSAL = (): void => {
@@ -321,6 +315,9 @@ const DISPATCH_SUBMITPROPOSAL = async (): Promise<void> => {
 }
 
 const closePopup = (): void => {
+  if (ACTION_SUBMITPROPOSAL.isSuccess) {
+    navigateTo('/')
+  }
   RESET_SUBMITPROPOSAL()
   emit(events.POPUP_CLOSE)
 }

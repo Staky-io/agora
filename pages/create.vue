@@ -28,9 +28,10 @@
           <ControlsFormInput
             v-model="v$.description.$model"
             :errors="v$.description.$errors"
+            is-required
             is-wysiwyg
             type="textarea"
-            label="Description (optional)"
+            label="Description"
             :tag="`${v$.description.$model.length}/${maxDiscussionLength}`"
             placeholder="The description of your proposal"
             :rows="12"
@@ -122,7 +123,7 @@ const formStates = reactive<FormStates>({
 
 const v$ = useVuelidate<FormStates, FormRules>({
   title: { required },
-  description: { maxLength: maxLength(maxDiscussionLength) },
+  description: { required, maxLength: maxLength(maxDiscussionLength) },
   discussion: { url },
   expiration: { required },
 }, formStates)

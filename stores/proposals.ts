@@ -67,7 +67,7 @@ export const useProposalsStore = defineStore('proposals-store', () => {
 
         proposals.value.push({
           uid: proposalDataFromScore._proposalId,
-          discussion: (proposalDataFromIpfs.discussion !== 'undefined' && proposalDataFromIpfs.discussion) || '',
+          discussion: proposalDataFromIpfs.discussion || '',
           title: proposalDataFromIpfs.title || '',
           description: proposalDataFromIpfs.description || '',
           creator: proposalDataFromScore._creator,
@@ -100,7 +100,7 @@ export const useProposalsStore = defineStore('proposals-store', () => {
       proposals.value = [...new Array(proposalsDataFromScore.length)]
         .map((_, index): Proposal => ({
           uid: proposalsDataFromScore[index]._proposalId,
-          discussion: (proposalsDataFromIpfs[index].discussion !== 'undefined' && proposalsDataFromIpfs[index].discussion) || '',
+          discussion: proposalsDataFromIpfs[index].discussion || '',
           title: proposalsDataFromIpfs[index].title || '',
           description: proposalsDataFromIpfs[index].description || '',
           creator: proposalsDataFromScore[index]._creator,

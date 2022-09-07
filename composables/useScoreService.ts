@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import axios from 'axios'
 import IconService from 'icon-sdk-js'
 import type TransactionResult from 'icon-sdk-js/build/data/Formatter/TransactionResult'
@@ -5,6 +6,34 @@ import type { Hash } from 'icon-sdk-js/build/types/hash'
 
 type ScoreParams = {
   [key in `_${string}`]: string | number | ScoreParams
+}
+
+export type BlockData = {
+  block_hash: string
+  confirmed_transaction_list: Array<{
+    data?: {
+      method?: string
+      params?: ScoreParams
+      result?: unknown
+    }
+    dataType: string
+    timestamp: string
+    txHash: string
+    version: string
+    from?: string
+    nid?: string
+    nonce?: string
+    signature?: string
+    stepLimit?: string
+    to?: string
+  }>
+  height: number
+  merkle_tree_root_hash: string
+  peer_id: string
+  prev_block_hash: string
+  signature: string
+  time_stamp: number
+  version: string
 }
 
 export type TxResult = {
@@ -46,8 +75,7 @@ export const useScoreService = () => {
     }
   }
 
-  // TODO: check type
-  const getBlockData = async (blockHash: string): Promise<unknown> => {
+  const getBlockData = async (blockHash: string): Promise<BlockData> => {
     try {
       const options = {
         method: 'post',

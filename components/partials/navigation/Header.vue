@@ -152,6 +152,7 @@ const createIsPreviewing = useState<boolean>('create-is-previewing', () => false
 const { images } = storeToRefs(useImagesStore())
 const { isLoggedIn, address, truncatedAddress } = storeToRefs(useUserStore())
 const { emit, events } = useEventsBus()
+const { SCORECallReadOnly } = useScoreService()
 
 const headingType = ref<HEADING>(null)
 const scrollRatio = ref<number>(0)
@@ -167,7 +168,6 @@ const socialsData = ref<SocialData[]>([
 ])
 
 const protocolLogo = computed<string>(() => images.value.logo)
-const { SCORECallReadOnly } = useScoreService()
 
 const updateTab = (index: number): void => {
   activeTabIndex.value = index
