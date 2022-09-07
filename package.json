@@ -36,7 +36,7 @@
     "axios": "^0.27.2",
     "color": "^4.2.3",
     "highlight.js": "^11.6.0",
-    "icon-sdk-js": "^1.2.3",
+    "icon-sdk-js": "^0.0.18",
     "ipfs-http-client": "^57.0.3",
     "mersenne-twister": "^1.1.0",
     "nuxt": "3.0.0-rc.3",
