@@ -12,54 +12,54 @@
     </nuxt-link>
     <form
       v-if="!createIsPreviewing"
-      class="grid gap-32 grid-cols-1fr-auto-1fr items-start before:content-['']"
+      class="grid gap-32 l:grid-cols-1fr-auto xl:grid-cols-1fr-auto-1fr items-start"
       @submit.prevent="onSubmit"
     >
-      <div class="grid gap-40 w-576">
-        <div class="grid gap-32">
-          <ControlsFormInput
-            v-model="v$.title.$model"
-            :errors="v$.title.$errors"
-            is-required
-            label="Title"
-            tag="The title of your proposal"
-            placeholder="e.g. Change protocol inflation to 7.4%"
-          />
-          <ControlsFormInput
-            v-model="v$.description.$model"
-            :errors="v$.description.$errors"
-            is-required
-            is-wysiwyg
-            type="textarea"
-            label="Description"
-            :tag="`${v$.description.$model.length}/${maxDiscussionLength}`"
-            placeholder="The description of your proposal"
-            :rows="12"
-          />
-          <ControlsFormInput
-            v-model="v$.discussion.$model"
-            :errors="v$.discussion.$errors"
-            label="Discussion (optional)"
-            tag="The forum link of your proposal"
-            placeholder="e.g. https://forum.icon.community/proposal..."
-          />
-        </div>
-        <ControlsButtonAction
-          version="tertiary"
-          is-important
-          type="submit"
-        >
-          Submit
-        </ControlsButtonAction>
-      </div>
+      <ControlsFormInput
+        v-model="v$.title.$model"
+        :errors="v$.title.$errors"
+        is-required
+        label="Title"
+        tag="The title of your proposal"
+        placeholder="e.g. Change protocol inflation to 7.4%"
+        class="col-start-1 xl:col-start-2"
+      />
       <ControlsFormSelect
         v-model="v$.expiration.$model"
         :errors="v$.expiration.$errors"
-        class="w-256"
+        class="l:row-start-1 l:col-start-2 xl:col-start-3 l:w-256"
         is-required
         label="Proposal length"
         :options="Object.values(EXPIRATION)"
       />
+      <ControlsFormInput
+        v-model="v$.description.$model"
+        :errors="v$.description.$errors"
+        is-required
+        is-wysiwyg
+        type="textarea"
+        label="Description"
+        :tag="`${v$.description.$model.length}/${maxDiscussionLength}`"
+        placeholder="The description of your proposal"
+        :rows="12"
+        class="col-start-1 xl:col-start-2"
+      />
+      <ControlsFormInput
+        v-model="v$.discussion.$model"
+        :errors="v$.discussion.$errors"
+        label="Discussion (optional)"
+        tag="The forum link of your proposal"
+        placeholder="e.g. https://forum.icon.community/proposal..."
+        class="col-start-1 xl:col-start-2"
+      />
+      <ControlsButtonAction
+        version="tertiary"
+        is-important
+        type="submit"
+        class="col-start-1 xl:col-start-2 l:w-576 mt-8"
+      >
+        Submit
+      </ControlsButtonAction>
     </form>
     <DisplaysCardProposal
       v-else

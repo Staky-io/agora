@@ -3,7 +3,8 @@
     :is="to ? NuxtLink : 'button'"
     class="
       relative
-      px-24
+      px-16
+      m:px-24
       rounded-max
       whitespace-nowrap
       select-none
@@ -135,20 +136,12 @@ const props = withDefaults(defineProps<Props>(), {
   copiedText: '',
 })
 
-const { copyText } = useCopyText()
+const { copyText, isCopying } = useCopyText()
 const { NuxtLink } = useNuxtLink()
-
-const isCopying = ref<boolean>(false)
-const copyTimeout = ref<NodeJS.Timeout>(null)
 
 const onClick = (): void => {
   if (props.copiedText) {
-    clearTimeout(copyTimeout.value)
     copyText(props.copiedText)
-    isCopying.value = true
-    copyTimeout.value = setTimeout(() => {
-      isCopying.value = false
-    }, 1000)
   }
 }
 </script>

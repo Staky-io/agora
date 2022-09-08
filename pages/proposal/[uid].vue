@@ -19,7 +19,7 @@
           is-full
           v-bind="currentProposal"
         />
-        <div class="grid gap-20 grid-flow-col auto-cols-fr">
+        <div class="grid gap-20 l:grid-flow-col auto-cols-fr">
           <DisplaysCardVote
             v-if="isLoggedIn && currentProposal.status === 'Active'"
             title="Cast your vote"

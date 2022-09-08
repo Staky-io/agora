@@ -3,6 +3,8 @@ export const useCopyText = (timeout = 1000) => {
 
   const messageText = ref<string>('')
 
+  const isCopying = computed<boolean>(() => !!messageText.value)
+
   const copyText = (text: string, message?: string): void => {
     if (navigator) {
       navigator.clipboard.writeText(text)
@@ -17,6 +19,7 @@ export const useCopyText = (timeout = 1000) => {
 
   return {
     messageText,
+    isCopying,
     copyText,
   }
 }

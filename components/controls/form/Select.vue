@@ -63,7 +63,7 @@
           />
         </button>
         <div
-          class="absolute top-full grid w-full mt-10 bg-grey-400 rounded-5 shadow-lg overflow-hidden origin-top transition-transform duration-200"
+          class="absolute top-full z-1 grid w-full mt-10 bg-grey-400 rounded-5 shadow-lg overflow-hidden origin-top transition-transform duration-200"
           :class="isOpen ? 'scale-y-100' : 'scale-y-0'"
         >
           <button

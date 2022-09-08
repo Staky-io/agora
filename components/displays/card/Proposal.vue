@@ -1,5 +1,11 @@
 <template>
-  <article class="grid gap-32 grid-cols-1fr-auto justify-between items-start p-32 text-left rounded-30 border-1 border-grey-200 border-opacity-0 hover:border-opacity-100 transition-border duration-200">
+  <article class="grid gap-16 m:gap-32 m:grid-cols-1fr-auto justify-between items-start p-32 text-left rounded-30 border-1 border-grey-200 border-opacity-0 hover:border-opacity-100 transition-border duration-200">
+    <UtilsChip
+      :version="status === 'Active' ? 'success' : 'error'"
+      class="justify-self-start m:order-last"
+    >
+      {{ status }}
+    </UtilsChip>
     <div class="grid gap-10 max-w-640">
       <div class="grid gap-10 grid-flow-col items-center justify-start">
         <UtilsJazzicon
@@ -7,7 +13,7 @@
           :address="creator"
           :diameter="24"
         />
-        <div class="text-white">
+        <div class="text-white break-all">
           <component
             :is="isFull ? 'h1' : 'h2'"
             class="inline typo-title-l"
@@ -17,7 +23,28 @@
           {{ ' ' }}
           <span class="text-grey-100 typo-text-semibold">by</span>
           {{ ' ' }}
-          <span class="text-primary typo-text-medium">{{ /hx[a-f0-9]{40,40}/.test(creator) ? truncate(creator) : creator }}</span>
+          <button
+            :class="$style.button"
+            class="typo-text-medium"
+            @click.stop.prevent="copyText(creator)"
+          >
+            {{ /hx[a-f0-9]{40,40}/.test(creator) ? truncate(creator) : creator }}
+            <transition
+              name="fade-quick"
+              mode="out-in"
+            >
+              <UtilsIcon
+                v-if="!isCopying"
+                class="w-16 h-16 text-grey-100"
+                name="Copy"
+              />
+              <UtilsIcon
+                v-else
+                class="w-16 h-16 text-grey-100"
+                name="State/Success"
+              />
+            </transition>
+          </button>
         </div>
       </div>
       <p
@@ -25,11 +52,12 @@
         class="text-grey-100 typo-text-semibold"
       >
         Discussion: <NuxtLink
-          class="text-primary"
+          :class="$style.button"
           :to="discussion"
+          :title="discussion"
           target="_blank"
         >
-          {{ discussion }}
+          {{ truncate({ string: discussion, start: 30, end: 0 }) }}
         </NuxtLink>
       </p>
       <VMdPreview
@@ -67,9 +95,6 @@
         />
       </div>
     </div>
-    <UtilsChip :version="status === 'Active' ? 'success' : 'error'">
-      {{ status }}
-    </UtilsChip>
   </article>
 </template>
 
@@ -109,6 +134,8 @@ const props = withDefaults(defineProps<Props>(), {
   isFull: false,
 })
 
+const { copyText, isCopying } = useCopyText()
+
 const truncatedDescription = computed<string>(
   () => (
     !props.isFull && props.description.split(' ').length > 25
@@ -147,3 +174,9 @@ const progressVersion = computed(() => {
   }
 })
 </script>
+
+<style lang="scss" module>
+.button {
+  @apply px-6 py-4 text-primary bg-primary bg-opacity-0 rounded-5 transition-background duration-100 hover:bg-opacity-20;
+}
+</style>

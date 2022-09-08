@@ -1,6 +1,6 @@
 <template>
   <span
-    class="grid place-items-center px-24 py-16 rounded-max typo-text-medium"
+    class="grid place-items-center px-12 m:px-24 py-8 m:py-16 rounded-max typo-text-medium"
     :class="{
       'text-white bg-primary bg-opacity-15': version === 'primary',
       'text-primary bg-white bg-opacity-15': version === 'secondary',
