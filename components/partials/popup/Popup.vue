@@ -14,7 +14,7 @@
         @click.stop
       >
         <div class="grid gap-10 grid-cols-1fr-auto items-center">
-          <h3 class="typo-title-3">
+          <h3 class="typo-title-s">
             <slot name="header" />
           </h3>
           <button

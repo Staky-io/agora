@@ -71,7 +71,7 @@
             </div>
           </DisplaysCardVote>
           <DisplaysCardVote title="Current results">
-            <div class="grid gap-20">
+            <div class="grid gap-16 m:gap-20">
               <DisplaysStatProgress
                 version="success"
                 :choice="resultsVotes.for.choice"

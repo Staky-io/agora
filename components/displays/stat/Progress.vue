@@ -1,11 +1,11 @@
 <template>
   <div
-    class="grid gap-16"
+    class="grid gap-12 m:gap-16"
     :class="{ 'grid-cols-1fr-auto items-center': isMinified }"
   >
     <div
-      class="grid gap-16"
-      :class="isMinified ? 'order-last' : 'grid-flow-col justify-between'"
+      class="grid gap-12 m:gap-16"
+      :class="isMinified ? 'order-last' : 'grid-flow-col justify-between items-center'"
     >
       <span
         v-if="!isMinified"
@@ -13,13 +13,15 @@
       >
         {{ choice }}
       </span>
-      <div :class="{ 'grid place-items-center': isMinified }">
+      <div
+        class="typo-text-regular"
+        :class="{ 'grid place-items-center': isMinified }"
+      >
         <template v-if="!isMinified">
-          <span class="text-grey-100 typo-text-regular">{{ count }}</span>
+          <span class="text-grey-100">{{ count }}</span>
           {{ ' ' }}
         </template>
         <span
-          class="typo-text-regular"
           :class="{
             'text-success': version === 'success',
             'text-warning': version === 'warning',

@@ -6,8 +6,10 @@
       flex
       justify-center
       items-center
-      w-40
-      h-40
+      w-32
+      m:w-40
+      h-32
+      m:h-40
       before:absolute
       before:w-full
       before:h-full
@@ -41,7 +43,7 @@
   >
     <UtilsIcon
       :name="name"
-      class="relative w-20 h-20"
+      class="relative w-16 m:w-20 h-16 m:h-20"
     />
   </component>
 </template>

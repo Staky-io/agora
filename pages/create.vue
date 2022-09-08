@@ -29,7 +29,7 @@
         :errors="v$.expiration.$errors"
         class="l:row-start-1 l:col-start-2 xl:col-start-3 l:w-256"
         is-required
-        label="Proposal length"
+        label="Proposal duration"
         :options="Object.values(EXPIRATION)"
       />
       <ControlsFormInput

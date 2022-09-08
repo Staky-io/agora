@@ -1,5 +1,5 @@
 <template>
-  <article class="grid gap-16 m:gap-32 m:grid-cols-1fr-auto justify-between items-start p-32 text-left rounded-30 border-1 border-grey-200 border-opacity-0 hover:border-opacity-100 transition-border duration-200">
+  <article class="grid gap-16 m:gap-32 m:grid-cols-1fr-auto justify-between items-start p-24 m:p-32 text-left rounded-30 border-1 border-grey-200 border-opacity-0 hover:border-opacity-100 transition-border duration-200">
     <UtilsChip
       :version="status === 'Active' ? 'success' : 'error'"
       class="justify-self-start m:order-last"
@@ -7,13 +7,13 @@
       {{ status }}
     </UtilsChip>
     <div class="grid gap-10 max-w-640">
-      <div class="grid gap-10 grid-flow-col items-center justify-start">
+      <div class="grid gap-10 grid-flow-col items-start justify-start">
         <UtilsJazzicon
           class="flex justify-center items-center"
           :address="creator"
           :diameter="24"
         />
-        <div class="text-white break-all">
+        <div class="mt-1 text-white break-all">
           <component
             :is="isFull ? 'h1' : 'h2'"
             class="inline typo-title-l"
@@ -63,7 +63,6 @@
       <VMdPreview
         v-if="isFull"
         :text="truncatedDescription"
-        class="mt-10"
       />
       <p
         v-else

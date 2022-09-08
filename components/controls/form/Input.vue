@@ -1,6 +1,6 @@
 <template>
   <label
-    class="grid gap-20"
+    class="grid gap-16 m:gap-20"
     :class="{
       [$style.hasErrors]: errors && errors.length,
       'hasErrors': errors && errors.length,
@@ -233,7 +233,7 @@ onUnmounted(() => {
 }
 
 .input {
-  @apply px-24 py-20 text-white font-medium text-14 placeholder:text-grey-100 bg-transparent border-1 border-grey-200 rounded-20 transition-border duration-200 hover:border-primary active:border-primary focus:border-primary;
+  @apply px-20 m:px-24 py-16 m:py-20 text-white font-medium text-14 placeholder:text-grey-100 bg-transparent border-1 border-grey-200 rounded-20 transition-border duration-200 hover:border-primary active:border-primary focus:border-primary;
 }
 </style>
 

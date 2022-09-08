@@ -22,7 +22,7 @@
       before:duration-200
     "
     :class="[
-      isImportant ? 'h-60 typo-button-l' : 'h-40 typo-button-s',
+      isImportant ? 'h-48 m:h-60 typo-button-l' : 'h-32 m:h-40 typo-button-s',
       isLocked ? {
         'text-grey-100 border-grey-200 cursor-not-allowed': ['success-border', 'warning-border', 'error-border', 'info-border', 'neutral-border'].includes(version),
       } : (!isActive ? {

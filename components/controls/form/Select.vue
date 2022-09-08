@@ -36,8 +36,10 @@
             justify-between
             items-center
             w-full
-            px-24
-            py-20
+            px-20
+            m:px-24
+            py-16
+            m:py-20
             text-white
             font-medium
             text-14
@@ -58,7 +60,7 @@
           {{ model }}
           <UtilsIcon
             name="Chevron/Left"
-            class="w-20 h-20 origin-center transition-transform duration-100"
+            class="w-16 m:w-20 h-16 m:h-20 origin-center transition-transform duration-100"
             :class="{ '-rotate-90': isOpen }"
           />
         </button>

@@ -70,7 +70,11 @@
 
 #__nuxt .v-md-textarea-editor pre,
 #__nuxt .v-md-textarea-editor textarea {
-  @apply pr-24 pl-24 bg-transparent text-white text-14 font-inter font-medium placeholder:text-grey-100;
+  @apply px-20 py-16 bg-transparent text-white text-14 font-inter font-medium placeholder:text-grey-100;
+}
+
+#__nuxt .v-md-editor__preview-wrapper .v-md-editor-preview {
+  @apply px-20 pt-16;
 }
 
 #__nuxt .scrollbar__thumb {
@@ -83,6 +87,10 @@
 
 #__nuxt .github-markdown-body a {
   @apply text-primary;
+}
+
+#__nuxt .github-markdown-body > *:last-child {
+  @apply mb-0;
 }
 
 #__nuxt .github-markdown-body table tr {

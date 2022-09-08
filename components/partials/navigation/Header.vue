@@ -72,11 +72,11 @@
               :tabs="tabsNames"
               @update="updateTab"
             />
-            <div class="grid gap-4 grid-flow-col items-center justify-end">
+            <div class="grid gap-2 grid-flow-col items-center justify-end">
               <a
                 v-for="(socialData, i) in socialsData.filter(({ url }) => url && url.includes('https'))"
                 :key="`socialData-${i}`"
-                class="grid place-items-center w-20 h-20 text-primary"
+                class="grid place-items-center w-24 h-24 p-2 text-primary bg-primary bg-opacity-0 rounded-full transition-background duration-100 hover:bg-opacity-20"
                 :href="socialData.url"
                 :title="socialData.name"
                 target="_blank"
@@ -216,8 +216,13 @@ onUnmounted(() => {
 }
 
 .protocolPicture {
-  width: calcScrollValue(30px, 60px);
-  height: calcScrollValue(30px, 60px);
+  width: calcScrollValue(20px, 40px);
+  height: calcScrollValue(20px, 40px);
+
+  @screen s {
+    width: calcScrollValue(30px, 60px);
+    height: calcScrollValue(30px, 60px);
+  }
 }
 
 .protocolTitle {

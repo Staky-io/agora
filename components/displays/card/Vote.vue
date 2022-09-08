@@ -1,5 +1,5 @@
 <template>
-  <div class="grid gap-16 content-start p-32 bg-grey-300 rounded-30">
+  <div class="grid gap-16 content-start p-24 m:p-32 bg-grey-300 rounded-30">
     <div
       v-if="title || subtitle"
       class="grid grid-flow-col justify-between items-baseline gap-10"
