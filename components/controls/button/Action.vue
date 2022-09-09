@@ -69,29 +69,29 @@
   >
     <div class="relative grid gap-10 grid-flow-col place-content-center place-items-center">
       <slot />
-      <template v-if="copiedText">
+      <div
+        v-if="copiedText"
+        class="flex justify-center items-center w-20 h-20"
+        :class="{
+          'text-grey-100': ['primary', 'secondary'].includes(version),
+        }"
+      >
         <transition
           name="fade-quick"
           mode="out-in"
         >
           <UtilsIcon
             v-if="!isCopying"
-            class="w-20 h-20"
-            :class="{
-              'text-grey-100': version === 'primary'
-            }"
+            class="w-full h-full"
             name="Copy"
           />
           <UtilsIcon
             v-else
-            class="w-20 h-20"
-            :class="{
-              'text-grey-100': version === 'primary'
-            }"
+            class="w-full h-full"
             name="State/Success"
           />
         </transition>
-      </template>
+      </div>
     </div>
   </component>
 </template>
