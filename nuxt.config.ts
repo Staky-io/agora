@@ -17,7 +17,6 @@ const parseTwitter = (twitter: string): string => {
 export default defineNuxtConfig({
   publicRuntimeConfig: {
     name: process.env.APP_NAME,
-    tokenSymbol: process.env.APP_TOKEN_SYMBOL,
     scoreAddress: process.env.APP_SCORE_ADDRESS,
     symbol: process.env.APP_SYMBOL,
     iconNetwork: process.env.APP_ICON_NETWORK,

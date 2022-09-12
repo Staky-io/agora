@@ -202,16 +202,11 @@ watch(route, ({ name }) => {
 
 onMounted(async () => {
   minTokens.value = parseInt(await SCORECallReadOnly<string>('minimumThreshold'), 16) / (10 ** 18)
-  // eslint-disable-next-line no-underscore-dangle
-  const infos = (await SCORECallReadOnly<unknown>('governanceTokenInfo'))
-  // eslint-disable-next-line no-underscore-dangle
+  const infos = (await SCORECallReadOnly<{ _address: string, _id: string, _type: string }>('governanceTokenInfo'))
   if (infos._type === 'irc-31') {
-    console.log(address)
-    // eslint-disable-next-line no-underscore-dangle
-    usersToken.value = parseInt((await SCORECallReadOnly<unknown>('balanceOf', { _owner: address.value, _id: infos._id }, infos._address)), 16) / (10 ** 18)
-    console.log(balance)
+    usersToken.value = parseInt((await SCORECallReadOnly<string>('balanceOf', { _owner: address.value, _id: infos._id }, infos._address)), 16) / (10 ** 18)
   } else {
-    usersToken.value = parseInt((await SCORECallReadOnly<unknown>('balanceOf', { _owner: address.value }, infos._address)), 16) / (10 ** 18)
+    usersToken.value = parseInt((await SCORECallReadOnly<string>('balanceOf', { _owner: address.value }, infos._address)), 16) / (10 ** 18)
   }
 
   window.addEventListener('scroll', onPageScroll)

@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import axios from 'axios'
 import { defineStore, storeToRefs } from 'pinia'
 import { useUserStore } from './user'
