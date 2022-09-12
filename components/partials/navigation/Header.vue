@@ -23,6 +23,12 @@
             Connect
           </ControlsButtonAction>
           <template v-else-if="truncatedAddress">
+            <!-- <div class="grid place-content-center place-items-center h-32 m:h-40 px-16 m:px-24 rounded-max typo-button-s text-white bg-primary bg-opacity-40 border-1 border-primary">
+              <span>
+                1000
+                <span class="text-white text-opacity-60">token</span>
+              </span>
+            </div> -->
             <ControlsButtonAction :copied-text="address">
               {{ truncatedAddress }}
             </ControlsButtonAction>
