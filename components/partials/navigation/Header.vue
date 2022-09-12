@@ -23,12 +23,13 @@
             Connect
           </ControlsButtonAction>
           <template v-else-if="truncatedAddress">
-            <!-- <div class="grid place-content-center place-items-center h-32 m:h-40 px-16 m:px-24 rounded-max typo-button-s text-white bg-primary bg-opacity-40 border-1 border-primary">
+            <div class="grid place-content-center place-items-center h-32 m:h-40 px-16 m:px-24 rounded-max typo-button-s text-white bg-primary bg-opacity-40 border-1 border-primary">
               <span>
-                1000
-                <span class="text-white text-opacity-60">token</span>
+                <span>Voting power:</span>
+                {{ usersToken }}
+                <span class="text-white text-opacity-60">{{ symbol }}</span>
               </span>
-            </div> -->
+            </div>
             <ControlsButtonAction :copied-text="address">
               {{ truncatedAddress }}
             </ControlsButtonAction>
@@ -148,6 +149,7 @@ type SocialData = {
 
 const {
   name: appName,
+  symbol,
   discord,
   github,
   twitter,
@@ -165,6 +167,7 @@ const scrollRatio = ref<number>(0)
 const minTokens = ref<number>(0)
 const hasNavigationTab = ref<boolean>(false)
 const activeTabIndex = ref<number>(0)
+const usersToken = ref<number>(0)
 const tabsNames = ref<string[]>(['Proposals', 'New proposals'])
 
 const socialsData = ref<SocialData[]>([
@@ -199,6 +202,18 @@ watch(route, ({ name }) => {
 
 onMounted(async () => {
   minTokens.value = parseInt(await SCORECallReadOnly<string>('minimumThreshold'), 16) / (10 ** 18)
+  // eslint-disable-next-line no-underscore-dangle
+  const infos = (await SCORECallReadOnly<unknown>('governanceTokenInfo'))
+  // eslint-disable-next-line no-underscore-dangle
+  if (infos._type === 'irc-31') {
+    console.log(address)
+    // eslint-disable-next-line no-underscore-dangle
+    usersToken.value = parseInt((await SCORECallReadOnly<unknown>('balanceOf', { _owner: address.value, _id: infos._id }, infos._address)), 16) / (10 ** 18)
+    console.log(balance)
+  } else {
+    usersToken.value = parseInt((await SCORECallReadOnly<unknown>('balanceOf', { _owner: address.value }, infos._address)), 16) / (10 ** 18)
+  }
+
   window.addEventListener('scroll', onPageScroll)
   onPageScroll()
 })

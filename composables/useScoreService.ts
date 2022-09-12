@@ -77,10 +77,10 @@ export const useScoreService = () => {
 
   const service = new IconService(new IconService.HttpProvider(`${url}api/v3`))
 
-  const SCORECallReadOnly = async <T>(method: string, params?: ScoreParams): Promise<T> => {
+  const SCORECallReadOnly = async <T>(method: string, params?: ScoreParams, score?: string): Promise<T> => {
     try {
       const txObj = new IconService.IconBuilder.CallBuilder()
-        .to(scoreAddress)
+        .to(score || scoreAddress)
         .method(method)
       const call = params ? txObj.params(params) : txObj
 
