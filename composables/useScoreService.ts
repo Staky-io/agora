@@ -1,8 +1,25 @@
 /* eslint-disable camelcase */
 import axios from 'axios'
 import IconService from 'icon-sdk-js'
-import type TransactionResult from 'icon-sdk-js/build/data/Formatter/TransactionResult'
-import type { Hash } from 'icon-sdk-js/build/types/hash'
+import BigNumber from 'bignumber.js'
+
+type Hash = string | BigNumber | number
+
+type TransactionResult = {
+  status: Hash;
+  to: string;
+  txHash: string;
+  txIndex: number;
+  blockHeight: number;
+  blockHash: string;
+  cumulativeStepUsed: BigNumber;
+  stepUsed: BigNumber;
+  stepPrice: BigNumber;
+  scoreAddress?: string;
+  eventLogs?: unknown;
+  logsBloom?: unknown;
+  failure?: unknown;
+}
 
 type ScoreParams = {
   [key in `_${string}`]: string | number | ScoreParams
@@ -123,7 +140,7 @@ export const useScoreService = () => {
     }
   }
 
-  const getTxResult = async (hash: string): Promise<TransactionResult> => {
+  const getTxResult = async (hash: Hash): Promise<TransactionResult> => {
     try {
       return await service.getTransactionResult(hash).execute()
     } catch (error) {
