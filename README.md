@@ -48,6 +48,7 @@ Define the environment variables to set up your project in a `.env` file:
 APP_URL: The URL of your application project.
 APP_COLOR: The primary color of your project. It should be in [a hexadecimal form](https://en.wikipedia.org/wiki/Web_colors#Shorthand_hexadecimal_form).
 APP_NAME: The name of your project.
+APP_TOKEN_SYMBOL: The symbol of the token.
 APP_SCORE_ADDRESS: The address of your contract.
 APP_ICON_NETWORK: The network of your contract.
 APP_LOGO_HASH: The IPFS hash of your logo.
