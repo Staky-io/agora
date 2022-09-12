@@ -5,6 +5,7 @@ import { useUserStore } from './user'
 
 export type Proposal = {
   uid: string
+  endTime: number
   discussion: string
   title: string
   description: string
@@ -67,6 +68,7 @@ export const useProposalsStore = defineStore('proposals-store', () => {
 
         proposals.value.push({
           uid: proposalDataFromScore._proposalId,
+          endTime: parseInt(proposalDataFromScore._endTime, 16) / 1000,
           discussion: proposalDataFromIpfs.discussion || '',
           title: proposalDataFromIpfs.title || '',
           description: proposalDataFromIpfs.description || '',
@@ -100,6 +102,7 @@ export const useProposalsStore = defineStore('proposals-store', () => {
       proposals.value = [...new Array(proposalsDataFromScore.length)]
         .map((_, index): Proposal => ({
           uid: proposalsDataFromScore[index]._proposalId,
+          endTime: parseInt(proposalsDataFromScore[index]._endTime, 16) / 1000,
           discussion: proposalsDataFromIpfs[index].discussion || '',
           title: proposalsDataFromIpfs[index].title || '',
           description: proposalsDataFromIpfs[index].description || '',

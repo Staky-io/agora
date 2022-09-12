@@ -18,13 +18,28 @@
         <DisplaysCardProposal
           is-full
           v-bind="currentProposal"
+          @setClosable="isClosable = true"
         />
         <div class="grid gap-20 l:grid-flow-col auto-cols-fr">
           <DisplaysCardVote
             v-if="isLoggedIn && currentProposal.status === 'Active'"
-            title="Cast your vote"
+            :title="isClosable ? 'Close the proposal' : 'Cast your vote'"
           >
-            <div class="grid gap-24">
+            <div
+              v-if="isClosable"
+              class="grid gap-24"
+            >
+              <p class="typo-paragraph">
+                The proposal vote delay is now expired. You can close the proposal.
+              </p>
+              <ControlsButtonAction @click="onClose">
+                Close
+              </ControlsButtonAction>
+            </div>
+            <div
+              v-else
+              class="grid gap-24"
+            >
               <div class="grid gap-12 grid-cols-2">
                 <ControlsButtonAction
                   version="success-border"
@@ -110,7 +125,7 @@ const proposalsStore = useProposalsStore()
 const usersStore = useUserStore()
 const { fetchProposal } = proposalsStore
 const { currentProposal, userVotes } = storeToRefs(proposalsStore)
-const { address, isLoggedIn } = storeToRefs(usersStore)
+const { isLoggedIn } = storeToRefs(usersStore)
 const { emit, events } = useEventsBus()
 
 type VoteChoice = keyof typeof currentProposal.value.votes
@@ -124,6 +139,7 @@ type Results = {
 }
 
 const currentVote = ref<VoteChoice>(null)
+const isClosable = ref<boolean>(false)
 
 const userVote = computed<VoteChoice>(() => (typeof uid === 'string' ? userVotes.value[uid] : null))
 
@@ -131,6 +147,12 @@ const resultsVotes = computed<Results>(() => {
   const totalCounts = Object.values(currentProposal.value.votes).reduce((accu, curr) => accu + curr, 0)
   return Object.entries(currentProposal.value.votes).reduce((accu, [choice, count]) => ({ ...accu, [choice]: { choice, count, ratio: totalCounts ? count / totalCounts : 0 } }), {}) as Results
 })
+
+const onClose = async (): Promise<void> => {
+  if (typeof uid === 'string') {
+    emit(events.POPUP_ACTION, { name: 'CloseProposal', handleGuard: true, params: { uid } })
+  }
+}
 
 const onVote = async (): Promise<void> => {
   if (typeof uid === 'string' && currentVote.value) {

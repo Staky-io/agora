@@ -35,15 +35,12 @@
 </template>
 
 <script setup lang="ts">
-type Sizes =
-  | 's'
-  | 'm'
-  | 'l'
+type Size = 's' | 'm' | 'l'
 
 type Props = {
   blockOverlayClick?: boolean
   requireButton?: boolean
-  size?: Sizes
+  size?: Size
 }
 
 withDefaults(defineProps<Props>(), {

@@ -3,11 +3,11 @@
     <template #header>
       <h2>
         <client-only>
-          <template v-if="ACTION_SUBMITVOTE.tx.hash">
-            Your vote has been submitted!
+          <template v-if="ACTION_CLOSEPROPOSAL.tx.hash">
+            The proposal has been closed!
           </template>
-          <template v-else-if="ACTION_SUBMITVOTE.isLoading || ACTION_SUBMITVOTE.isWaiting">
-            Submitting...
+          <template v-else-if="ACTION_CLOSEPROPOSAL.isLoading || ACTION_CLOSEPROPOSAL.isWaiting">
+            Closing...
           </template>
         </client-only>
       </h2>
@@ -19,12 +19,12 @@
       >
         <!-- SUCCESS -->
         <div
-          v-if="ACTION_SUBMITVOTE.tx.hash"
+          v-if="ACTION_CLOSEPROPOSAL.tx.hash"
           key="success"
           class="grid gap-20 typo-paragraph"
         >
           <span>
-            Congratulations! The vote has been submitted.
+            The proposal has been closed!
           </span>
           <ControlsButtonAction @click="closePopup">
             Close
@@ -32,12 +32,12 @@
         </div>
         <!-- LOADING -->
         <div
-          v-else-if="ACTION_SUBMITVOTE.isLoading || ACTION_SUBMITVOTE.isWaiting"
+          v-else-if="ACTION_CLOSEPROPOSAL.isLoading || ACTION_CLOSEPROPOSAL.isWaiting"
           key="loading"
           class="grid gap-20 typo-paragraph"
         >
           <span>
-            Your vote is being submitted. Please wait for few seconds.
+            The proposal is being closed. Please wait for few seconds.
           </span>
         </div>
       </transition>
@@ -58,7 +58,6 @@ const { CallTransactionBuilder } = IconBuilder
 
 type Props = {
   uid: string
-  vote?: string
 }
 
 type ActionData = {
@@ -96,7 +95,7 @@ const { address, wallet } = storeToRefs(useUserStore())
 const nid = iconNetwork === 'testnet' ? '83' : '1'
 
 const isGlobalListening = ref<boolean>(false)
-const ACTION_SUBMITVOTE = reactive<ActionData>({
+const ACTION_CLOSEPROPOSAL = reactive<ActionData>({
   type: 'RPC',
   tx: {},
   query: {},
@@ -108,14 +107,13 @@ const ACTION_SUBMITVOTE = reactive<ActionData>({
 
 const paramsState = {
   _proposalId: props.uid,
-  _vote: props.vote,
 }
 
-const getSubmitVoteQuery = async (): Promise<Query> => {
+const getCloseProposalQuery = async (): Promise<Query> => {
   try {
     const stepLimit = await getStepLimit(
       address.value,
-      'vote',
+      'closeProposal',
       scoreAddress,
       paramsState,
     )
@@ -128,7 +126,7 @@ const getSubmitVoteQuery = async (): Promise<Query> => {
       .nonce(IconConverter.toBigNumber('1'))
       .version(IconConverter.toBigNumber('3'))
       .timestamp((new Date()).getTime() * 1000)
-      .method('vote')
+      .method('closeProposal')
       .params(paramsState)
       .build()
 
@@ -148,7 +146,7 @@ const getSubmitVoteQuery = async (): Promise<Query> => {
   }
 }
 
-const makeSubmitVoteQuery = async (hash: string): Promise<{ block: BlockData, tx: { txHash: string } }> => new Promise((resolve, reject) => {
+const makeCloseProposalQuery = async (hash: string): Promise<{ block: BlockData, tx: { txHash: string } }> => new Promise((resolve, reject) => {
   getTxResult(hash)
     .then((tx) => {
       if (tx.status === 1) {
@@ -162,30 +160,30 @@ const makeSubmitVoteQuery = async (hash: string): Promise<{ block: BlockData, tx
     })
     .catch(() => {
       setTimeout(() => {
-        resolve(makeSubmitVoteQuery(hash))
+        resolve(makeCloseProposalQuery(hash))
       }, 2000)
     })
 })
 
-const RESET_SUBMITVOTE = (): void => {
-  ACTION_SUBMITVOTE.tx = {}
-  ACTION_SUBMITVOTE.query = {}
-  ACTION_SUBMITVOTE.isListening = false
-  ACTION_SUBMITVOTE.isWaiting = false
-  ACTION_SUBMITVOTE.isLoading = false
-  ACTION_SUBMITVOTE.isSuccess = false
+const RESET_CLOSEPROPOSAL = (): void => {
+  ACTION_CLOSEPROPOSAL.tx = {}
+  ACTION_CLOSEPROPOSAL.query = {}
+  ACTION_CLOSEPROPOSAL.isListening = false
+  ACTION_CLOSEPROPOSAL.isWaiting = false
+  ACTION_CLOSEPROPOSAL.isLoading = false
+  ACTION_CLOSEPROPOSAL.isSuccess = false
 }
 
 const RESET_LISTENER = (): void => {
   isGlobalListening.value = false
-  RESET_SUBMITVOTE()
+  RESET_CLOSEPROPOSAL()
 }
 
-const CALLBACK_SUBMITVOTE = async (hash: string): void => {
+const CALLBACK_CLOSEPROPOSAL = async (hash: string): void => {
   try {
-    RESET_SUBMITVOTE()
-    ACTION_SUBMITVOTE.tx = { hash }
-    ACTION_SUBMITVOTE.isSuccess = true
+    RESET_CLOSEPROPOSAL()
+    ACTION_CLOSEPROPOSAL.tx = { hash }
+    ACTION_CLOSEPROPOSAL.isSuccess = true
 
     if (typeof uid === 'string') {
       await fetchProposal(uid)
@@ -199,14 +197,14 @@ const CALLBACK_SUBMITVOTE = async (hash: string): void => {
   }
 }
 
-const COMPLETE_SUBMITVOTE = async (hash: string): Promise<void> => {
+const COMPLETE_CLOSEPROPOSAL = async (hash: string): Promise<void> => {
   try {
-    ACTION_SUBMITVOTE.isWaiting = false
-    ACTION_SUBMITVOTE.isLoading = true
-    const { tx } = await makeSubmitVoteQuery(hash)
-    CALLBACK_SUBMITVOTE(tx.txHash)
+    ACTION_CLOSEPROPOSAL.isWaiting = false
+    ACTION_CLOSEPROPOSAL.isLoading = true
+    const { tx } = await makeCloseProposalQuery(hash)
+    CALLBACK_CLOSEPROPOSAL(tx.txHash)
   } catch (error) {
-    RESET_SUBMITVOTE()
+    RESET_CLOSEPROPOSAL()
 
     notify.error({
       title: 'Error',
@@ -228,9 +226,9 @@ const HANDLE_RPC = async (payload): Promise<void> => {
     })
   } else if (result) {
     isGlobalListening.value = false
-    if (ACTION_SUBMITVOTE.type === 'RPC' && ACTION_SUBMITVOTE.isListening) {
-      ACTION_SUBMITVOTE.isListening = false
-      await COMPLETE_SUBMITVOTE(result)
+    if (ACTION_CLOSEPROPOSAL.type === 'RPC' && ACTION_CLOSEPROPOSAL.isListening) {
+      ACTION_CLOSEPROPOSAL.isListening = false
+      await COMPLETE_CLOSEPROPOSAL(result)
     }
   }
 }
@@ -274,24 +272,27 @@ const TX_ROUTER = async ({ type, payload }: { type: string, payload: Query }): P
   }
 }
 
-const DISPATCH_SUBMITVOTE = async (): Promise<void> => {
-  ACTION_SUBMITVOTE.query = {
+const DISPATCH_CLOSEPROPOSAL = async (): Promise<void> => {
+  ACTION_CLOSEPROPOSAL.query = {
     address: address.value,
     score: scoreAddress,
     params: paramsState,
   }
 
-  const query = await getSubmitVoteQuery()
+  const query = await getCloseProposalQuery()
 
   isGlobalListening.value = true
-  ACTION_SUBMITVOTE.isWaiting = true
-  ACTION_SUBMITVOTE.isListening = true
+  ACTION_CLOSEPROPOSAL.isWaiting = true
+  ACTION_CLOSEPROPOSAL.isListening = true
 
   TX_ROUTER({ type: 'REQUEST_JSON-RPC', payload: query })
 }
 
 const closePopup = (): void => {
-  RESET_SUBMITVOTE()
+  if (ACTION_CLOSEPROPOSAL.isSuccess) {
+    navigateTo('/')
+  }
+  RESET_CLOSEPROPOSAL()
   emit(events.POPUP_CLOSE)
 }
 
@@ -303,6 +304,6 @@ watch(() => bus.value.get(events.ICONEX_CANCEL), () => {
 watch(() => bus.value.get(events.ICONEX_RPC), HANDLE_RPC)
 
 onMounted(async () => {
-  await DISPATCH_SUBMITVOTE()
+  await DISPATCH_CLOSEPROPOSAL()
 })
 </script>

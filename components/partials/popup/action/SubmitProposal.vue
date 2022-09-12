@@ -21,7 +21,7 @@
         <div
           v-if="ACTION_SUBMITPROPOSAL.tx.hash"
           key="success"
-          class="grid gap-20"
+          class="grid gap-20 typo-paragraph"
         >
           <span>
             Congratulations! The proposal has been submitted.
@@ -34,7 +34,7 @@
         <div
           v-else-if="ACTION_SUBMITPROPOSAL.isLoading || ACTION_SUBMITPROPOSAL.isWaiting"
           key="loading"
-          class="grid gap-20"
+          class="grid gap-20 typo-paragraph"
         >
           <span>
             Your proposal is being submitted. Please wait for few seconds.

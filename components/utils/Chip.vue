@@ -1,7 +1,12 @@
 <template>
   <span
-    class="grid place-items-center px-12 m:px-24 py-8 m:py-16 rounded-max typo-text-medium"
+    class="grid place-items-center rounded-max typo-text-medium"
     :class="{
+      // Size
+      'px-8 m:px-16 py-4 m:py-8': size === 's',
+      'px-16 m:px-24 py-12 m:py-16': size === 'l',
+
+      // Version
       'text-white bg-primary bg-opacity-15': version === 'primary',
       'text-primary bg-white bg-opacity-15': version === 'secondary',
       'text-success bg-success bg-opacity-15': version === 'success',
@@ -16,6 +21,8 @@
 </template>
 
 <script setup lang="ts">
+type Size = 's' | 'l'
+
 type Version =
   | 'primary'
   | 'secondary'
@@ -26,10 +33,12 @@ type Version =
   | 'neutral'
 
 type Props = {
+  size?: Size
   version?: Version
 }
 
 withDefaults(defineProps<Props>(), {
+  size: 'l',
   version: 'primary',
 })
 </script>
