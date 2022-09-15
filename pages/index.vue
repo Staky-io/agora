@@ -9,13 +9,13 @@
         class="mx-auto my-40"
       />
       <div
-        v-else-if="proposals.length"
+        v-else-if="Object.keys(proposals).length"
         class="grid gap-16"
       >
         <nuxt-link
-          v-for="(proposal, i) in proposals.sort((a,b) => b.uid-a.uid)"
-          :key="`proposal-${i}`"
-          :to="{ name: 'proposal-uid', params: { uid: proposal.uid } }"
+          v-for="([uid, proposal]) in Object.entries(proposals).sort((a, b) => parseInt(b[0], 16) - parseInt(a[0], 16))"
+          :key="`proposal-${uid}`"
+          :to="{ name: 'proposal-uid', params: { uid } }"
         >
           <DisplaysCardProposal v-bind="proposal" />
         </nuxt-link>
