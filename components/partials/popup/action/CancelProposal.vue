@@ -3,10 +3,10 @@
     <template #header>
       <h2>
         <client-only>
-          <template v-if="ACTION_CLOSEPROPOSAL.tx.hash">
-            The proposal has been closed!
+          <template v-if="ACTION_CANCELPROPOSAL.tx.hash">
+            The proposal has been canceled!
           </template>
-          <template v-else-if="ACTION_CLOSEPROPOSAL.isLoading || ACTION_CLOSEPROPOSAL.isWaiting">
+          <template v-else-if="ACTION_CANCELPROPOSAL.isLoading || ACTION_CANCELPROPOSAL.isWaiting">
             Closing...
           </template>
         </client-only>
@@ -19,12 +19,12 @@
       >
         <!-- SUCCESS -->
         <div
-          v-if="ACTION_CLOSEPROPOSAL.tx.hash"
+          v-if="ACTION_CANCELPROPOSAL.tx.hash"
           key="success"
           class="grid gap-20 typo-paragraph"
         >
           <span>
-            The proposal has been closed!
+            The proposal has been canceled!
           </span>
           <ControlsButtonAction @click="closePopup">
             Close
@@ -32,12 +32,12 @@
         </div>
         <!-- LOADING -->
         <div
-          v-else-if="ACTION_CLOSEPROPOSAL.isLoading || ACTION_CLOSEPROPOSAL.isWaiting"
+          v-else-if="ACTION_CANCELPROPOSAL.isLoading || ACTION_CANCELPROPOSAL.isWaiting"
           key="loading"
           class="grid gap-20 typo-paragraph"
         >
           <span>
-            The proposal is being closed. Please wait for few seconds.
+            The proposal is being canceled. Please wait for few seconds.
           </span>
         </div>
       </transition>
@@ -95,7 +95,7 @@ const { address, wallet } = storeToRefs(useUserStore())
 const nid = iconNetwork === 'testnet' ? '83' : '1'
 
 const isGlobalListening = ref<boolean>(false)
-const ACTION_CLOSEPROPOSAL = reactive<ActionData>({
+const ACTION_CANCELPROPOSAL = reactive<ActionData>({
   type: 'RPC',
   tx: {},
   query: {},
@@ -109,11 +109,11 @@ const paramsState = {
   _proposalId: props.uid,
 }
 
-const getCloseProposalQuery = async (): Promise<Query> => {
+const getCancelProposalQuery = async (): Promise<Query> => {
   try {
     const stepLimit = await getStepLimit(
       address.value,
-      'closeProposal',
+      'cancelProposal',
       scoreAddress,
       paramsState,
     )
@@ -126,7 +126,7 @@ const getCloseProposalQuery = async (): Promise<Query> => {
       .nonce(IconConverter.toBigNumber('1'))
       .version(IconConverter.toBigNumber('3'))
       .timestamp((new Date()).getTime() * 1000)
-      .method('closeProposal')
+      .method('cancelProposal')
       .params(paramsState)
       .build()
 
@@ -146,7 +146,7 @@ const getCloseProposalQuery = async (): Promise<Query> => {
   }
 }
 
-const makeCloseProposalQuery = async (hash: string): Promise<{ block: BlockData, tx: { txHash: string } }> => new Promise((resolve, reject) => {
+const makeCancelProposalQuery = async (hash: string): Promise<{ block: BlockData, tx: { txHash: string } }> => new Promise((resolve, reject) => {
   getTxResult(hash)
     .then((tx) => {
       if (tx.status === 1) {
@@ -160,30 +160,30 @@ const makeCloseProposalQuery = async (hash: string): Promise<{ block: BlockData,
     })
     .catch(() => {
       setTimeout(() => {
-        resolve(makeCloseProposalQuery(hash))
+        resolve(makeCancelProposalQuery(hash))
       }, 2000)
     })
 })
 
-const RESET_CLOSEPROPOSAL = (): void => {
-  ACTION_CLOSEPROPOSAL.tx = {}
-  ACTION_CLOSEPROPOSAL.query = {}
-  ACTION_CLOSEPROPOSAL.isListening = false
-  ACTION_CLOSEPROPOSAL.isWaiting = false
-  ACTION_CLOSEPROPOSAL.isLoading = false
-  ACTION_CLOSEPROPOSAL.isSuccess = false
+const RESET_CANCELPROPOSAL = (): void => {
+  ACTION_CANCELPROPOSAL.tx = {}
+  ACTION_CANCELPROPOSAL.query = {}
+  ACTION_CANCELPROPOSAL.isListening = false
+  ACTION_CANCELPROPOSAL.isWaiting = false
+  ACTION_CANCELPROPOSAL.isLoading = false
+  ACTION_CANCELPROPOSAL.isSuccess = false
 }
 
 const RESET_LISTENER = (): void => {
   isGlobalListening.value = false
-  RESET_CLOSEPROPOSAL()
+  RESET_CANCELPROPOSAL()
 }
 
-const CALLBACK_CLOSEPROPOSAL = async (hash: string): Promise<void> => {
+const CALLBACK_CANCELPROPOSAL = async (hash: string): Promise<void> => {
   try {
-    RESET_CLOSEPROPOSAL()
-    ACTION_CLOSEPROPOSAL.tx = { hash }
-    ACTION_CLOSEPROPOSAL.isSuccess = true
+    RESET_CANCELPROPOSAL()
+    ACTION_CANCELPROPOSAL.tx = { hash }
+    ACTION_CANCELPROPOSAL.isSuccess = true
 
     if (typeof uid === 'string') {
       await fetchProposal(uid)
@@ -197,14 +197,14 @@ const CALLBACK_CLOSEPROPOSAL = async (hash: string): Promise<void> => {
   }
 }
 
-const COMPLETE_CLOSEPROPOSAL = async (hash: string): Promise<void> => {
+const COMPLETE_CANCELPROPOSAL = async (hash: string): Promise<void> => {
   try {
-    ACTION_CLOSEPROPOSAL.isWaiting = false
-    ACTION_CLOSEPROPOSAL.isLoading = true
-    const { tx } = await makeCloseProposalQuery(hash)
-    CALLBACK_CLOSEPROPOSAL(tx.txHash)
+    ACTION_CANCELPROPOSAL.isWaiting = false
+    ACTION_CANCELPROPOSAL.isLoading = true
+    const { tx } = await makeCancelProposalQuery(hash)
+    CALLBACK_CANCELPROPOSAL(tx.txHash)
   } catch (error) {
-    RESET_CLOSEPROPOSAL()
+    RESET_CANCELPROPOSAL()
 
     notify.error({
       title: 'Error',
@@ -226,9 +226,9 @@ const HANDLE_RPC = async (payload): Promise<void> => {
     })
   } else if (result) {
     isGlobalListening.value = false
-    if (ACTION_CLOSEPROPOSAL.type === 'RPC' && ACTION_CLOSEPROPOSAL.isListening) {
-      ACTION_CLOSEPROPOSAL.isListening = false
-      await COMPLETE_CLOSEPROPOSAL(result)
+    if (ACTION_CANCELPROPOSAL.type === 'RPC' && ACTION_CANCELPROPOSAL.isListening) {
+      ACTION_CANCELPROPOSAL.isListening = false
+      await COMPLETE_CANCELPROPOSAL(result)
     }
   }
 }
@@ -272,27 +272,27 @@ const TX_ROUTER = async ({ type, payload }: { type: string, payload: Query }): P
   }
 }
 
-const DISPATCH_CLOSEPROPOSAL = async (): Promise<void> => {
-  ACTION_CLOSEPROPOSAL.query = {
+const DISPATCH_CANCELPROPOSAL = async (): Promise<void> => {
+  ACTION_CANCELPROPOSAL.query = {
     address: address.value,
     score: scoreAddress,
     params: paramsState,
   }
 
-  const query = await getCloseProposalQuery()
+  const query = await getCancelProposalQuery()
 
   isGlobalListening.value = true
-  ACTION_CLOSEPROPOSAL.isWaiting = true
-  ACTION_CLOSEPROPOSAL.isListening = true
+  ACTION_CANCELPROPOSAL.isWaiting = true
+  ACTION_CANCELPROPOSAL.isListening = true
 
   TX_ROUTER({ type: 'REQUEST_JSON-RPC', payload: query })
 }
 
 const closePopup = (): void => {
-  if (ACTION_CLOSEPROPOSAL.isSuccess) {
+  if (ACTION_CANCELPROPOSAL.isSuccess) {
     navigateTo('/')
   }
-  RESET_CLOSEPROPOSAL()
+  RESET_CANCELPROPOSAL()
   emit(events.POPUP_CLOSE)
 }
 
@@ -304,6 +304,6 @@ watch(() => bus.value.get(events.ICONEX_CANCEL), () => {
 watch(() => bus.value.get(events.ICONEX_RPC), HANDLE_RPC)
 
 onMounted(async () => {
-  await DISPATCH_CLOSEPROPOSAL()
+  await DISPATCH_CANCELPROPOSAL()
 })
 </script>

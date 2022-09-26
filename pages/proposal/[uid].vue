@@ -23,7 +23,7 @@
         <div class="grid gap-20 l:grid-flow-col auto-cols-fr">
           <DisplaysCardVote
             v-if="isLoggedIn && currentProposal.status === 'Active'"
-            :title="isClosable ? 'Close the proposal' : 'Cast your vote'"
+            :title="isClosable ? 'Proposal expired' : 'Cast your vote'"
           >
             <div
               v-if="isClosable"
@@ -33,7 +33,7 @@
                 The proposal vote delay is now expired. You can close the proposal.
               </p>
               <ControlsButtonAction @click="onClose">
-                Close
+                Close the proposal
               </ControlsButtonAction>
             </div>
             <div
@@ -83,6 +83,17 @@
                   class="w-20 h-20"
                 />
               </div>
+              <div
+                v-if="currentProposal.creator === address"
+                class="grid border-t-1 border-grey-200 mt-8 pt-32"
+              >
+                <ControlsButtonAction
+                  version="secondary"
+                  @click="onCancel"
+                >
+                  Cancel the proposal
+                </ControlsButtonAction>
+              </div>
             </div>
           </DisplaysCardVote>
           <DisplaysCardVote title="Current results">
@@ -125,7 +136,7 @@ const proposalsStore = useProposalsStore()
 const usersStore = useUserStore()
 const { fetchProposal } = proposalsStore
 const { currentProposal, userVotes } = storeToRefs(proposalsStore)
-const { isLoggedIn } = storeToRefs(usersStore)
+const { isLoggedIn, address } = storeToRefs(usersStore)
 const { emit, events } = useEventsBus()
 
 type VoteChoice = keyof typeof currentProposal.value.votes
@@ -151,6 +162,12 @@ const resultsVotes = computed<Results>(() => {
 const onClose = async (): Promise<void> => {
   if (typeof uid === 'string') {
     emit(events.POPUP_ACTION, { name: 'CloseProposal', handleGuard: true, params: { uid } })
+  }
+}
+
+const onCancel = async (): Promise<void> => {
+  if (typeof uid === 'string') {
+    emit(events.POPUP_ACTION, { name: 'CancelProposal', handleGuard: true, params: { uid } })
   }
 }
 
