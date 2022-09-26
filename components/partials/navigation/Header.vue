@@ -23,7 +23,10 @@
             Connect
           </ControlsButtonAction>
           <template v-else-if="truncatedAddress">
-            <div class="grid place-content-center place-items-center h-32 m:h-40 px-16 m:px-24 rounded-max typo-button-s text-white bg-primary bg-opacity-40 border-1 border-primary">
+            <div
+              v-if="usersToken >= 0"
+              class="grid place-content-center place-items-center h-32 m:h-40 px-16 m:px-24 rounded-max typo-button-s text-white bg-primary bg-opacity-40 border-1 border-primary"
+            >
               <span>
                 <span>Voting power:</span>
                 {{ usersToken }}
@@ -200,14 +203,20 @@ watch(route, ({ name }) => {
   }
 }, { immediate: true })
 
+const unwatch = watch(isLoggedIn, async (value) => {
+  if (value) {
+    try {
+      const infos = await SCORECallReadOnly<{ _address: string, _id: string, _type: string }>('governanceTokenInfo')
+      usersToken.value = parseInt((await SCORECallReadOnly<string>('balanceOf', { _owner: address.value, ...infos._type === 'irc-31' && { _id: infos._id } }, infos._address)), 16) / (10 ** 18)
+      unwatch()
+    } catch (error) {
+      usersToken.value = -1
+    }
+  }
+}, { immediate: true })
+
 onMounted(async () => {
   minTokens.value = parseInt(await SCORECallReadOnly<string>('minimumThreshold'), 16) / (10 ** 18)
-  const infos = (await SCORECallReadOnly<{ _address: string, _id: string, _type: string }>('governanceTokenInfo'))
-  if (infos._type === 'irc-31') {
-    usersToken.value = parseInt((await SCORECallReadOnly<string>('balanceOf', { _owner: address.value, _id: infos._id }, infos._address)), 16) / (10 ** 18)
-  } else {
-    usersToken.value = parseInt((await SCORECallReadOnly<string>('balanceOf', { _owner: address.value }, infos._address)), 16) / (10 ** 18)
-  }
 
   window.addEventListener('scroll', onPageScroll)
   onPageScroll()
