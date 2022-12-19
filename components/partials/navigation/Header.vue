@@ -48,7 +48,7 @@
     <client-only>
       <div :class="$style.headingContainer">
         <Container
-          class="grid gap-20 items-center py-10 bg-grey-400 transition-height duration-400 pointer-events-auto"
+          class="grid gap-20 items-center py-10 bg-grey-400 transition-height duration-300 pointer-events-auto"
           :class="[
             $style.headingWrapper,
             {
@@ -61,7 +61,7 @@
           <template v-if="headingType === 'protocol-proposals'">
             <div class="grid gap-10 grid-flow-col items-center justify-start">
               <div
-                class="w-auto h-full aspect-square transition-size duration-400"
+                class="w-auto h-full aspect-square transition-size duration-300"
                 :class="$style.protocolPicture"
               >
                 <img
@@ -70,7 +70,7 @@
                 >
               </div>
               <h2
-                class="typo-title-l origin-left transition-transform duration-400"
+                class="typo-title-l origin-left transition-transform duration-300"
                 :class="$style.protocolTitle"
               >
                 {{ appName }}

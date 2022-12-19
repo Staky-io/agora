@@ -56,7 +56,7 @@
         version="tertiary"
         is-important
         type="submit"
-        class="col-start-1 xl:col-start-2 l:w-576 mt-8"
+        class="col-start-1 xl:col-start-2 w-full xl:w-576 mt-8"
       >
         Submit
       </ControlsButtonAction>
