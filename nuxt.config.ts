@@ -18,6 +18,7 @@ export default defineNuxtConfig({
   publicRuntimeConfig: {
     name: process.env.APP_NAME,
     scoreAddress: process.env.APP_SCORE_ADDRESS,
+    decimals: process.env.APP_DECIMALS,
     symbol: process.env.APP_SYMBOL,
     iconNetwork: process.env.APP_ICON_NETWORK,
     logoHash: process.env.APP_LOGO_HASH,

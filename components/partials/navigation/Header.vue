@@ -156,6 +156,7 @@ const {
   discord,
   github,
   twitter,
+  decimals,
 } = useRuntimeConfig()
 const route = useRoute()
 const createIsPreviewing = useState<boolean>('create-is-previewing', () => false)
@@ -207,7 +208,7 @@ const unwatch = watch(isLoggedIn, async (value) => {
   if (value) {
     try {
       const infos = await SCORECallReadOnly<{ _address: string, _id: string, _type: string }>('governanceTokenInfo')
-      usersToken.value = parseInt((await SCORECallReadOnly<string>('balanceOf', { _owner: address.value, ...infos._type === 'irc-31' && { _id: infos._id } }, infos._address)), 16) / (10 ** 18)
+      usersToken.value = parseInt((await SCORECallReadOnly<string>('balanceOf', { _owner: address.value, ...infos._type === 'irc-31' && { _id: infos._id } }, infos._address)), 16) / (10 ** Number(decimals))
       unwatch()
     } catch (error) {
       usersToken.value = -1
@@ -216,7 +217,7 @@ const unwatch = watch(isLoggedIn, async (value) => {
 }, { immediate: true })
 
 onMounted(async () => {
-  minTokens.value = parseInt(await SCORECallReadOnly<string>('minimumThreshold'), 16) / (10 ** 18)
+  minTokens.value = parseInt(await SCORECallReadOnly<string>('minimumThreshold'), 16) / (10 ** Number(decimals))
 
   window.addEventListener('scroll', onPageScroll)
   onPageScroll()

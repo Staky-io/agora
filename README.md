@@ -24,6 +24,8 @@ APP_NAME: The name of your project.
 
 APP_SCORE_ADDRESS: The address of your contract.
 
+APP_DECIMALS: The amount of decimals of your voting token (usually 18 for fungible, 0 for NFTs)
+
 APP_SYMBOL: The symbol of the token.
 
 APP_ICON_NETWORK: The network of your contract.

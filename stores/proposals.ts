@@ -47,6 +47,8 @@ type UserVotes = {
 const getIpfs = (hash: string): string => `https://craft-network.mypinata.cloud/ipfs/${hash}`
 
 export const useProposalsStore = defineStore('proposals-store', () => {
+  const { decimals } = useRuntimeConfig()
+  console.log(decimals)
   const { address } = storeToRefs(useUserStore())
   const { SCORECallReadOnly } = useScoreService()
   const route = useRoute()
@@ -91,9 +93,9 @@ export const useProposalsStore = defineStore('proposals-store', () => {
           creator: _creator,
           status: _status,
           votes: {
-            for: parseInt(_forVoices, 16) / (10 ** 18),
-            against: parseInt(_againstVoices, 16) / (10 ** 18),
-            abstain: parseInt(_abstainVoices, 16) / (10 ** 18),
+            for: parseInt(_forVoices, 16) / (10 ** Number(decimals)),
+            against: parseInt(_againstVoices, 16) / (10 ** Number(decimals)),
+            abstain: parseInt(_abstainVoices, 16) / (10 ** Number(decimals)),
           },
         }
       }
@@ -133,9 +135,9 @@ export const useProposalsStore = defineStore('proposals-store', () => {
           creator: _creator,
           status: _status,
           votes: {
-            for: parseInt(_forVoices, 16) / (10 ** 18),
-            against: parseInt(_againstVoices, 16) / (10 ** 18),
-            abstain: parseInt(_abstainVoices, 16) / (10 ** 18),
+            for: parseInt(_forVoices, 16) / (10 ** Number(decimals)),
+            against: parseInt(_againstVoices, 16) / (10 ** Number(decimals)),
+            abstain: parseInt(_abstainVoices, 16) / (10 ** Number(decimals)),
           },
         }
       })
