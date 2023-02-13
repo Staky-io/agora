@@ -38,6 +38,8 @@ APP_DISCORD: The Discord ID of your Discord invitation link or the full link.
 
 APP_GITHUB: The GitHub username of your project or the full link.
 
+APP_DECIMALS: The amount of decimals of your tokens, usually 18 for IRC2 and 0 for NFT
+
 ```
 
   
