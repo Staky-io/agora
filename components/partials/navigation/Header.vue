@@ -29,7 +29,7 @@
             >
               <span>
                 <span>Voting power:</span>
-                {{ usersToken }}
+                {{ usersToken.toFixed(2) }}
                 <span class="text-white text-opacity-60">{{ symbol }}</span>
               </span>
             </div>
