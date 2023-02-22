@@ -206,7 +206,7 @@ const connectWallet = (id: WALLET_IDS): void => {
       connectLedger()
       break
     case 'myiconwallet':
-      //
+      connectIconex()
       break
     // no default
   }
