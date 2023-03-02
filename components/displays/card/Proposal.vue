@@ -4,10 +4,14 @@
     :class="{ 'px-24 m:px-32 rounded-30 border-1 border-grey-200 border-opacity-0 hover:border-opacity-100 transition-border duration-200': !isFull }"
   >
     <UtilsChip
-      :version="status === 'Active' ? 'success' : 'error'"
+      :version="(status === 'Active' || (status === 'Closed' && votesStatus.choice === 'for' )) ? 'success' : 'error'"
       class="justify-self-start m:order-last"
     >
-      {{ status }}
+      <span v-if="status === 'Active'">{{ status }}</span>
+      <span v-else>
+        <span v-if="votesStatus.choice === 'for'">Passed</span>
+        <span v-if="votesStatus.choice === 'against'">Failed</span>
+      </span>
     </UtilsChip>
     <div class="grid gap-10 max-w-640">
       <div class="grid gap-10 grid-flow-col items-start justify-start">
