@@ -87,6 +87,7 @@ import { useUserStore } from '@/stores/user'
 
 enum EXPIRATION {
   THREE_DAYS = '3 days',
+  FIVE_DAYS = '5 days',
   SEVEN_DAYS = '7 days',
   FOURTEEN_DAYS = '14 days',
 }

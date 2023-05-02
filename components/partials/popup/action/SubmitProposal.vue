@@ -110,6 +110,9 @@ switch (props.expiration) {
   case '3 days':
     expirationState = (new Date(Date.now()).getTime() + 1000 * 60 * 60 * 24 * 3) * 1000
     break
+  case '5 days':
+    expirationState = (new Date(Date.now()).getTime() + 1000 * 60 * 60 * 24 * 5) * 1000
+    break
   case '7 days':
     expirationState = (new Date(Date.now()).getTime() + 1000 * 60 * 60 * 24 * 7) * 1000
     break
