@@ -42,7 +42,7 @@ const { logoHash } = useRuntimeConfig()
 const [
   { data: dataLogo },
 ] = await Promise.all([
-  useAsyncData<IPFSQuery>('logo', () => $fetch(`https://craft-network.mypinata.cloud/ipfs/${logoHash}`)),
+  useAsyncData<IPFSQuery>('logo', () => $fetch(`https://craft-network.mypinata.cloud/ipfs/${logoHash}?pinataGatewayToken=oJhjrR8LQ2NWHUgZMg8wuUiy5dJs-SrfsQWlh4XYjNXB0y2INeaZfyjsf29OHaDR`)),
 ])
 
 const { setBrowser, setDevice } = useDeviceStore()

@@ -44,7 +44,7 @@ type UserVotes = {
   [id in string]: VoteValue
 }
 
-const getIpfs = (hash: string): string => `https://craft-network.mypinata.cloud/ipfs/${hash}`
+const getIpfs = (hash: string): string => `https://craft-network.mypinata.cloud/ipfs/${hash}?pinataGatewayToken=oJhjrR8LQ2NWHUgZMg8wuUiy5dJs-SrfsQWlh4XYjNXB0y2INeaZfyjsf29OHaDR`
 
 export const useProposalsStore = defineStore('proposals-store', () => {
   const { decimals } = useRuntimeConfig()
