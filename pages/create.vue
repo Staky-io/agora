@@ -48,7 +48,7 @@
         v-model="v$.discussion.$model"
         :errors="v$.discussion.$errors"
         label="Discussion (optional)"
-        tag="The forum link of your proposal"
+        tag="⚠️ Make sure to share your proposal before submitting it."
         placeholder="e.g. https://forum.icon.community/proposal..."
         class="col-start-1 xl:col-start-2"
       />
@@ -86,7 +86,6 @@ import { maxLength, required, url } from '@vuelidate/validators'
 import { useUserStore } from '@/stores/user'
 
 enum EXPIRATION {
-  THREE_DAYS = '3 days',
   FIVE_DAYS = '5 days',
   SEVEN_DAYS = '7 days',
   FOURTEEN_DAYS = '14 days',
@@ -119,7 +118,7 @@ const formStates = reactive<FormStates>({
   title: '',
   description: '',
   discussion: '',
-  expiration: EXPIRATION.THREE_DAYS,
+  expiration: EXPIRATION.SEVEN_DAYS,
 })
 
 const v$ = useVuelidate<FormStates, FormRules>({
